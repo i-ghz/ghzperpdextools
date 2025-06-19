@@ -41,6 +41,20 @@
     transform: scale(1.1);
   }
   
+  /* -- IMAGE HÉROS ---------------------------------------------------------- */
+  .hero-image-container {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .hero-image {
+    display: inline-block;
+    max-width: 300px;    /* taille moyenne */
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  
   /* -- TITRES & LIENS ------------------------------------------------------- */
   h1 {
     text-align: center;
@@ -231,7 +245,7 @@
     margin: 40px 0;
   }
   
-  /* -- RESPONSIVE TOUCHES FINALES -------------------------------------------------- */
+  /* -- RESPONSIVE TOUCHES FINALES -------------------------------------------- */
   @media (max-width:768px) {
     .container { width:95%; }
     h1 { font-size:28px; }
