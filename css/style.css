@@ -1,25 +1,39 @@
-/* -- GÉNÉRAL --------------------------------------------------------------- */
-* {
+/* -- Variables de thème par défaut (Light) ------------------------------- */
+:root {
+    --bg:            #f7f7f7;
+    --fg:            #333;
+    --card-bg:       #fff;
+    --card-border:   #ddd;
+    --primary:       #e10600;
+    --primary-50:    #c10500;
+    --shadow-light:  rgba(0,0,0,0.1);
+    --shadow-dark:   rgba(0,0,0,0.6);
+  }
+  
+  /* -- Variables de thème Sombre ------------------------------------------- */
+  .dark {
+    --bg:            #1e1e1e;
+    --fg:            #eee;
+    --card-bg:       #2a2a2a;
+    --card-border:   #444;
+    --primary:       #ff4f4f;
+    --primary-50:    #e04444;
+    --shadow-light:  rgba(0,0,0,0.6);
+    --shadow-dark:   rgba(0,0,0,0.9);
+  }
+  
+  /* -- Application des variables ------------------------------------------- */
+  body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  body {
     font-family: 'Arial', sans-serif;
-    background: #f7f7f7;
-    color: #333;
-  }
-  .container {
-    width: 80%;
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: var(--bg);
+    color: var(--fg);
+    transition: background 0.3s, color 0.3s;
   }
   
-  /* -- BOUTON “ACCUEIL” ------------------------------------------------------ */
+  /* -- Bouton “Accueil” ------------------------------------------------------ */
   .home-logo {
     position: fixed;
     top: 16px;
@@ -28,8 +42,8 @@
     height: 48px;
     border-radius: 50%;
     overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    transition: transform .2s;
+    box-shadow: 0 2px 6px var(--shadow-dark);
+    transition: transform 0.2s;
     z-index: 1000;
   }
   .home-logo img {
@@ -41,62 +55,97 @@
     transform: scale(1.1);
   }
   
-  /* -- IMAGE HÉROS ---------------------------------------------------------- */
-  .hero-image-container {
-    text-align: center;
-    margin-bottom: 30px;
+  /* -- Bouton Dark Mode (coin supérieur droit) ----------------------------- */
+  #theme-toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, transform 0.2s;
   }
-  .hero-image {
-    display: inline-block;
-    max-width: 300px;    /* taille moyenne */
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  #theme-toggle:hover {
+    background: var(--primary-50);
+    transform: scale(1.1);
   }
   
-  /* -- TITRES & LIENS ------------------------------------------------------- */
+  /* -- Conteneur principal --------------------------------------------------- */
+  .container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 80px auto 20px; /* espace en haut pour les boutons fixes */
+    padding: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px var(--shadow-light);
+    transition: background 0.3s, border 0.3s, box-shadow 0.3s;
+  }
+  
+  /* -- Titres & liens -------------------------------------------------------- */
   h1 {
     text-align: center;
     font-size: 36px;
-    color: #e10600;
+    color: var(--primary);
     margin-bottom: 20px;
   }
   h2, h3 {
-    color: #e10600;
+    color: var(--primary);
     margin-bottom: 15px;
   }
   h2 { font-size: 28px; }
-  h3 { font-size: 20px; color: #333; margin-top: 15px; }
+  h3 { font-size: 20px; color: var(--fg); margin-top: 15px; }
   a {
-    color: #e10600;
+    color: var(--primary);
     text-decoration: none;
   }
   a:hover {
     text-decoration: underline;
   }
   
-  /* -- BOUTONS --------------------------------------------------------------- */
-  .button,
-  button {
+  /* -- Hero image ------------------------------------------------------------ */
+  .hero-image-container {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .hero-image {
+    display: inline-block;
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px var(--shadow-light);
+  }
+  
+  /* -- Boutons --------------------------------------------------------------- */
+  .button, button {
     display: inline-block;
     margin: 10px 0;
     padding: 12px 20px;
     font-size: 18px;
     color: #fff;
-    background: #e10600;
+    background: var(--primary);
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background .3s ease;
+    transition: background 0.3s;
     text-align: center;
   }
-  .button:hover,
-  button:hover {
-    background: #c10500;
+  .button:hover, button:hover {
+    background: var(--primary-50);
   }
   
-  /* -- INDEX.HTML : CENTRAGE BOUTONS ---------------------------------------- */
+  /* -- Index.html : centrage boutons ----------------------------------------- */
   .buttons {
     display: flex;
     justify-content: center;
@@ -104,7 +153,7 @@
     margin-top: 40px;
   }
   
-  /* -- TABLEAUX ------------------------------------------------------------- */
+  /* -- Tableaux -------------------------------------------------------------- */
   table {
     width: 100%;
     border-collapse: collapse;
@@ -114,47 +163,47 @@
   th, td {
     padding: 12px;
     text-align: center;
-    border: 1px solid #ddd;
+    border: 1px solid var(--card-border);
   }
   th {
-    background: #e10600;
+    background: var(--primary);
     color: #fff;
   }
   td {
-    background: #f4f4f4;
+    background: var(--card-bg);
   }
   
-  /* -- GRILLES DE CARTES POUR AIRDROP --------------------------------------- */
+  /* -- Grille de cartes pour Airdrop ---------------------------------------- */
   .card-grid {
     display: grid;
     grid-template-columns: repeat(2,1fr);
     gap: 20px;
     margin-bottom: 40px;
   }
-  @media (max-width:768px) {
+  @media (max-width: 768px) {
     .card-grid { grid-template-columns:1fr; }
   }
   
-  /* -- CARTES --------------------------------------------------------------- */
+  /* -- Cartes --------------------------------------------------------------- */
   .card {
     display: flex;
     flex-direction: column;
-    background: #fff;
-    border: 1px solid #ddd;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 6px var(--shadow-light);
   }
   .card.promo {
     background: #f0f0f0;
-    border-color: #e10600;
+    border-color: var(--primary);
     text-align: center;
   }
   .card-header {
     display: flex;
     align-items: center;
     padding: 16px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--card-border);
   }
   .card-header .icon {
     font-size: 1.5rem;
@@ -162,7 +211,7 @@
   }
   .card-header h2 {
     font-size: 1.25rem;
-    color: #e10600;
+    color: var(--primary);
   }
   .card-header small {
     display: block;
@@ -177,14 +226,14 @@
     display: flex;
     justify-content: space-between;
     padding: 12px 16px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--card-border);
   }
   .card-footer .result {
     font-weight: bold;
-    color: #e10600;
+    color: var(--primary);
   }
   
-  /* -- FORMULAIRES DANS CARTES ---------------------------------------------- */
+  /* -- Formulaires dans cartes ---------------------------------------------- */
   .card-body form {
     width: 100%;
   }
@@ -192,7 +241,7 @@
     display: block;
     margin-bottom: 8px;
     font-size: 16px;
-    color: #333;
+    color: var(--fg);
   }
   .card-body select,
   .card-body input[type="number"] {
@@ -200,14 +249,14 @@
     padding: 12px;
     margin-bottom: 15px;
     font-size: 16px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--card-border);
     border-radius: 6px;
-    background: #fff;
-    color: #333;
+    background: var(--card-bg);
+    color: var(--fg);
   }
   .card-body select:focus,
   .card-body input[type="number"]:focus {
-    border-color: #e10600;
+    border-color: var(--primary);
     outline: none;
   }
   .fdv-row {
@@ -218,7 +267,7 @@
   .fdv-row input { flex:2; }
   .fdv-row select { flex:1; }
   
-  /* -- SLIDER & AFFICHAGE POURCENTAGE --------------------------------------- */
+  /* -- Slider & affichage % -------------------------------------------------- */
   input[type="range"] {
     width: 100%;
     margin: 8px 0;
@@ -229,34 +278,33 @@
     margin-bottom: 12px;
   }
   
-  /* -- RÉSULTATS DES CARTES -------------------------------------------------- */
+  /* -- Résultats des cartes -------------------------------------------------- */
   .results p {
     font-size: 16px;
     margin-bottom: 4px;
   }
   .results strong {
-    color: #e10600;
+    color: var(--primary);
   }
   
-  /* -- SÉPARATEUR ------------------------------------------------------------ */
+  /* -- Séparateur ----------------------------------------------------------- */
   hr {
     border: none;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--card-border);
     margin: 40px 0;
   }
   
-  /* -- RESPONSIVE TOUCHES FINALES -------------------------------------------- */
-  @media (max-width:768px) {
-    .container { width:95%; }
-    h1 { font-size:28px; }
-    h2 { font-size:24px; }
-    form label { font-size:14px; }
-    select, input[type="number"] { font-size:16px; }
-    input[type="range"] { margin:6px 0; }
-    .button, button {
-      width:100%;
-      font-size:20px;
-      padding:14px;
+  /* -- Responsive Touches finales ------------------------------------------- */
+  @media (max-width: 768px) {
+    .container { width: 95%; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 24px; }
+    .card-body label, form label { font-size: 14px; }
+    .card-body select, .card-body input[type="number"], input[type="range"] { font-size: 16px; }
+    .button, button, #theme-toggle {
+      width: 100%;
+      font-size: 20px;
+      padding: 14px;
     }
   }
   

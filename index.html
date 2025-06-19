@@ -4,30 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GHZ PerpDEX Toolbox</title>
+  <!-- Vercel Insights -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Bouton retour accueil -->
-    <a href="index.html" class="home-logo">
-      <img src="images/neymar.jpg" alt="Home">
-    </a>
+  <!-- Bouton Dark Mode -->
+  <button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">🌙</button>
 
+  <!-- Bouton retour accueil -->
+  <a href="index.html" class="home-logo">
+    <img src="images/neymar.jpg" alt="Accueil">
+  </a>
+
+  <div class="container">
     <h1>GHZ PerpDEX Toolbox</h1>
 
-    <!-- Nouvelle section pour l'image -->
+    <!-- Section Hero Image -->
     <div class="hero-image-container">
       <img src="images/ballon.jpg" alt="Ballon" class="hero-image">
     </div>
 
+    <!-- Boutons principaux -->
     <div class="buttons">
       <a href="funding-arbitrage.html" class="button">Funding Farming</a>
       <a href="airdrop-calculator.html" class="button">Airdrop Calculator</a>
     </div>
   </div>
+
+  <!-- Scripts -->
+  <script src="js/script-airdrop.js"></script>
+  <script src="js/script-api.js"></script>
+  <script src="js/theme-toggle.js"></script>
 </body>
 </html>

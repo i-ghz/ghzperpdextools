@@ -7,10 +7,14 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-    <!-- Bouton “home” en haut à gauche -->
+  <!-- Bouton “home” en haut à gauche -->
   <a href="index.html" class="home-logo">
     <img src="images/neymar.jpg" alt="Accueil" />
   </a>
+
+  <!-- Bouton dark/light en haut à droite -->
+  <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
+
   <div class="container">
 
     <!-- === Vest Exchange === -->
@@ -98,7 +102,7 @@
           <form id="extended-form">
             <label for="ext-supply">Total Points Supply</label>
             <input type="number" id="ext-supply" value="50" disabled />
-            
+
             <label for="ext-fdv">FDV</label>
             <div class="fdv-row">
               <input type="number" id="ext-fdv" value="100" min="0" />
@@ -150,5 +154,6 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="js/script-airdrop.js"></script>
+  <script src="js/theme-toggle.js"></script>  <!-- ton script dédié Dark/Light -->
 </body>
 </html>
