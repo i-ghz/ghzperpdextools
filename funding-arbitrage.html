@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Opportunités d'Arbitrage Funding</title>
-  <!-- Styles globaux -->
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-  <!-- Bouton “home” en haut à gauche -->
+  <!-- Bouton “home” -->
   <a href="index.html" class="home-logo">
-    <img src="images/neymar.jpg" alt="Accueil" />
+    <img src="images/neymar.jpg" alt="Accueil"/>
   </a>
-
-  <!-- Bouton de bascule Dark/Light Mode en haut à droite -->
-  <button id="theme-toggle" aria-label="Basculer thème" class="theme-toggle">🌙</button>
+  <!-- Toggle thème si présent -->
+  <button id="theme-toggle" class="theme-toggle">🌙</button>
 
   <div class="container">
     <h1>Opportunités d'Arbitrage Funding</h1>
-
-    <!-- Bouton pour trier par APR -->
-    <button id="sort-apr-btn" class="button">Trier par APR ↓</button>
-
-    <!-- Tableau d'arbitrage -->
+    <div class="actions">
+      <button id="sort-apr-btn" class="button">Trier par APR ↓</button>
+      <button id="filter-fav-btn" class="button">Afficher Favoris</button>
+    </div>
     <table id="arbitrage-table">
       <thead>
         <tr>
+          <th>★</th>
           <th>Pair</th>
           <th>Vest 1h</th>
           <th>Paradex 1h</th>
@@ -34,17 +32,13 @@
           <th>APR</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Rempli dynamiquement via js/script-api.js -->
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 
-  <!-- Librairie Axios pour les requêtes HTTP -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <!-- Ton script d’arbitrage (fetch + display) -->
+  <script src="js/favorite.js"></script>
   <script src="js/script-api.js"></script>
-  <!-- Script dédié au bascule Thème Clair/Sombre -->
   <script src="js/theme-toggle.js"></script>
 </body>
 </html>

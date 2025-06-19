@@ -307,4 +307,19 @@
       padding: 14px;
     }
   }
+  /* Colonne favoris */
+th:first-child, td:first-child {
+    width: 40px;
+    text-align: center;
+  }
+  span.fav {
+    cursor: pointer;
+    color: #ccc;
+    font-size: 1.2rem;
+    transition: color .2s;
+  }
+  span.fav.active {
+    color: gold;
+  }
+  
   
