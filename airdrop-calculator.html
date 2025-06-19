@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Airdrop Calculator</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <!-- Bouton “home” en haut à gauche -->
+  <a href="index.html" class="home-logo">
+    <img src="images/neymar.jpg" alt="Accueil" />
+  </a>
+  <div class="container">
+
+    <!-- === Vest Exchange === -->
+    <h1>Vest Exchange Airdrop Calculator</h1>
+    <div class="card-grid">
+      <!-- Vest Calculator Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">✨</span>
+          <div>
+            <h2>Your Vest Points</h2>
+            <small>Total points supply selectable</small>
+          </div>
+        </div>
+        <div class="card-body">
+          <form id="vest-form">
+            <label for="vest-supply">Total Points Supply</label>
+            <select id="vest-supply">
+              <option value="26">26 Million (6 months)</option>
+              <option value="52">52 Million (12 months)</option>
+              <option value="78">78 Million (18 months)</option>
+            </select>
+
+            <label for="vest-fdv">FDV</label>
+            <div class="fdv-row">
+              <input type="number" id="vest-fdv" value="1" min="0" />
+              <select id="vest-fdv-unit">
+                <option value="1e6">Million</option>
+                <option value="1e9">Billion</option>
+              </select>
+            </div>
+
+            <label for="vest-points">Your Points</label>
+            <input type="number" id="vest-points" value="0" min="0" />
+
+            <label for="vest-airdrop">Airdrop % of Points</label>
+            <input type="range" id="vest-airdrop" min="0" max="100" step="1" value="0" />
+            <div class="percent-display"><span id="vest-airdrop-val">0</span>%</div>
+
+            <button type="submit">Calculate Vest Airdrop</button>
+          </form>
+        </div>
+        <div class="card-footer">
+          <div>USD / Point:<br /><strong id="vest-usd-per-point">$0.0000</strong></div>
+          <div>Estimated Airdrop:<br /><strong id="vest-estimate">$0.00</strong></div>
+        </div>
+      </div>
+
+      <!-- Vest Promo Card -->
+      <div class="card promo">
+        <div class="card-header">
+          <span class="icon">🚀</span>
+          <div>
+            <h2>Don't have an account yet?<br />Create one now!</h2>
+            <small>Get a 10% boost in rewards</small>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="referral">
+            <a href="https://trade.vest.exchange/join/31318"
+               target="_blank"
+               rel="noopener noreferrer">
+               https://trade.vest.exchange/join/31318
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- === Extended Exchange === -->
+    <h1>Extended Exchange Airdrop Calculator</h1>
+    <div class="card-grid">
+      <!-- Extended Calculator Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">✨</span>
+          <div>
+            <h2>Your Extended Points</h2>
+            <small>Supply is fixed at 50 M</small>
+          </div>
+        </div>
+        <div class="card-body">
+          <form id="extended-form">
+            <label for="ext-supply">Total Points Supply</label>
+            <input type="number" id="ext-supply" value="50" disabled />
+            
+            <label for="ext-fdv">FDV</label>
+            <div class="fdv-row">
+              <input type="number" id="ext-fdv" value="100" min="0" />
+              <select id="ext-fdv-unit">
+                <option value="1e6">Million</option>
+                <option value="1e9">Billion</option>
+              </select>
+            </div>
+
+            <label for="ext-points">Your Points</label>
+            <input type="number" id="ext-points" value="0" min="0" />
+
+            <label for="ext-airdrop">Airdrop % of Points</label>
+            <input type="range" id="ext-airdrop" min="0" max="100" step="1" value="0" />
+            <div class="percent-display"><span id="ext-airdrop-val">0</span>%</div>
+
+            <button type="submit">Calculate Extended Airdrop</button>
+          </form>
+        </div>
+        <div class="card-footer">
+          <div>USD / Point:<br /><strong id="ext-usd-per-point">$0.0000</strong></div>
+          <div>Estimated Airdrop:<br /><strong id="ext-estimate">$0.00</strong></div>
+        </div>
+      </div>
+
+      <!-- Extended Promo Card -->
+      <div class="card promo">
+        <div class="card-header">
+          <span class="icon">🚀</span>
+          <div>
+            <h2>Don't have an account yet?<br />Create one now!</h2>
+            <small>Get a 10% fee discount</small>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="referral">
+            <a href="https://app.extended.exchange/join/GHZ"
+               target="_blank"
+               rel="noopener noreferrer">
+              https://app.extended.exchange/join/GHZ
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/script-airdrop.js"></script>
+</body>
+</html>

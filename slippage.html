@@ -1,0 +1,30 @@
+<form id="slippage-form">
+    <label for="dex">DEX :</label>
+    <select id="dex">
+      <option value="Vest">Vest</option>
+      <option value="Paradex">Paradex</option>
+    </select>
+  
+    <label for="market">Marché :</label>
+    <input type="text" id="market" placeholder="ex: BTC-PERP ou BTC-USD-PERP" required>
+  
+    <label for="quantity">Quantité :</label>
+    <input type="number" id="quantity" step="any" required>
+  
+    <fieldset>
+      <legend>Ordre :</legend>
+      <label><input type="radio" name="side" value="buy" checked> Achat</label>
+      <label><input type="radio" name="side" value="sell"> Vente</label>
+    </fieldset>
+  
+    <label for="tolerance">Tolérance (%) :</label>
+    <input type="number" id="tolerance" value="1" step="any" required>
+  
+    <button type="submit">Estimer Slippage</button>
+  </form>
+  
+  <div id="slippage-result"></div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/slippage.js"></script>
+  
