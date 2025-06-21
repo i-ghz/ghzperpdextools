@@ -1,5 +1,5 @@
 // public/js/script-api.js
-const API_URL = "http://localhost:4000/api/funding";
+const API_URL = "/api/funding";
 // public/js/script-api.js
 //const API_URL = "/api/funding";
 let dataStore = [];
