@@ -174,14 +174,16 @@ const TOKENS = [
    */
   function computeNetRate(rateA, rateB, strategy) {
     if (strategy === 'longAshortB') {
-      // net funding hourly pour la position delta neutre
-      return rateA - rateB;
-    } else if (strategy === 'longBshortA') {
+      // APR = fundingB - fundingA (car tu LONG sur A => tu PAYES fundingA, tu SHORT sur B => tu REÇOIS fundingB)
       return rateB - rateA;
+    } else if (strategy === 'longBshortA') {
+      // APR = fundingA - fundingB (long sur B, short sur A)
+      return rateA - rateB;
     }
     // fallback
-    return rateA - rateB;
+    return rateB - rateA;
   }
+  
   
   /**
    * loadAndPlot : fetch les deux CSV, parse, aligne, calcule APR cumulée selon la stratégie,
