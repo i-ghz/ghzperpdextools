@@ -53,3 +53,4 @@ export default async function handler(request, response) {
   // On répond immédiatement que les tâches ont été acceptées et lancées en arrière-plan.
   response.status(202).end('Accepted: All update jobs have been triggered.');
 }
+// Un commentaire pour forcer le déploiement
