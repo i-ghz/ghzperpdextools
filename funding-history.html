@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Funding History APR Comparateur</title>
+  <!-- Chart.js et date adapter Luxon -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@2/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
+  <link rel="stylesheet" href="css/funding-history.css">
+</head>
+<body>
+    <!-- Bouton Dark Mode -->
+<button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">🌙</button>
+<a href="index.html" class="home-logo">
+    <img src="images/neymar.jpg" alt="Accueil">
+  </a>
+  
+  <header>
+    <h1>Comparateur APR Delta-Neutre</h1>
+  </header>
+
+  <section class="controls">
+    <!-- Bloc horizontal : Token + Source A + Source B -->
+    <div class="selection-wrapper">
+      <div class="token-block">
+        <label for="tokenSelect">Token :</label>
+        <select id="tokenSelect"></select>
+      </div>
+      <div class="sources-group">
+        <fieldset class="source-group">
+          <legend>Source A</legend>
+          <label class="control-row">
+            <span>Plateforme :</span>
+            <select id="sourceA">
+              <option value="paradex">Paradex</option>
+              <option value="vest">Vest</option>
+              <option value="hyperliquid">Hyperliquid</option>
+              <option value="extended">Extended</option>
+            </select>
+          </label>
+          <label class="control-row">
+            <span>CSV Source A :</span>
+            <input type="text" id="urlA" placeholder="sera généré automatiquement" readonly>
+          </label>
+        </fieldset>
+        <fieldset class="source-group">
+          <legend>Source B</legend>
+          <label class="control-row">
+            <span>Plateforme :</span>
+            <select id="sourceB">
+              <option value="paradex">Paradex</option>
+              <option value="vest">Vest</option>
+              <option value="hyperliquid">Hyperliquid</option>
+              <option value="extended">Extended</option>
+            </select>
+          </label>
+          <label class="control-row">
+            <span>CSV Source B :</span>
+            <input type="text" id="urlB" placeholder="sera généré automatiquement" readonly>
+          </label>
+        </fieldset>
+      </div>
+    </div>
+
+    <!-- Stratégie -->
+    <fieldset class="strategy">
+      <legend>Stratégie :</legend>
+      <label>
+        <input type="radio" name="strategy" value="longAshortB" checked>
+        Long Source A / Short Source B
+      </label>
+      <label style="margin-left:15px;">
+        <input type="radio" name="strategy" value="longBshortA">
+        Long Source B / Short Source A
+      </label>
+    </fieldset>
+
+    <button id="loadPlot">Charger et tracer APR</button>
+  </section>
+
+  <div id="messageZero"></div>
+  <div id="aprResult"></div>
+  <canvas id="chartCanvas"></canvas>
+
+  <!-- Script principal (funding-history.js) -->
+  <script src="js/funding-history.js"></script>
+  <script src="js/theme-toggle.js"></script>
+</body>
+</html>

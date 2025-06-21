@@ -1,0 +1,33 @@
+{
+    "tokens": [
+      "WLD","TON","TRX","BTC","AAVE","SOL","ADA","INIT","AVAX","RESOLV",
+      "MELANIA","VIRTUAL","LTC","GRASS","WIF","MKR","JUP","PENDLE","TRUMP",
+      "XRP","TIA","PENGU","KAITO","S","ETH","DOT","HYPE","FARTCOIN","ONDO",
+      "BNB","BERA","POPCAT","SEI","DOGE","ENA","NEAR","SUI","TAO"
+    ],
+    "sources": {
+      "paradex": {
+        "script": "ParadexFundingHistory.js",
+        "marketPattern": "<TOKEN>",
+        "outputFilename": "paradex.csv"
+      },
+      "vest": {
+        "script": "VestFundingHistory.js",
+        "marketPattern": "<TOKEN>",
+        "outputFilename": "vest.csv"
+      },
+      "extended": {
+        "script": "ExtendedFundingHistory.js",
+        "marketPattern": "<TOKEN>-USD",
+        "outputFilename": "extended.csv"
+      },
+      "hyperliquid": {
+        "script": "HyperliquidFundingHistory.js",
+        "marketPattern": "<TOKEN>",
+        "outputFilename": "hyperliquid.csv"
+      }
+    },
+    "defaultDays": 30,
+    "outputDir": "../output/csv"
+  }
+  
