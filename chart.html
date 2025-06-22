@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Funding Rate Comparison</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #fff;
+  color: #333;
+}
+
+h2 {
+  color: #b30000;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.controls, .chart-controls, .main-controls {
+  background: #fff;
+  padding: 20px 28px 18px 28px;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(179,0,0,0.08);
+  margin-bottom: 24px;
+  max-width: 950px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#charts {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+label {
+  font-weight: bold;
+  color: #b30000;
+  margin-right: 7px;
+}
+
+select {
+  padding: 7px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  margin-right: 12px;
+  min-width: 100px;
+  font-size: 1.03rem;
+}
+
+button {
+  padding: 11px 28px;
+  font-size: 1.07rem;
+  background-color: #b30000;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-top: 6px;
+}
+
+button:hover {
+  background-color: #e60000;
+}
+
+canvas {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px;
+  max-width: 100%;
+  max-height: 470px;
+}
+
+@media (max-width: 900px) {
+  .controls, .chart-controls, .main-controls {
+    padding: 12px 4vw 14px 4vw;
+    max-width: 99vw;
+  }
+  #charts {
+    gap: 22px;
+    max-width: 98vw;
+  }
+}
+
+@media (max-width: 600px) {
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+  label, select, button {
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+  .controls, .chart-controls, .main-controls {
+    padding: 7px 1vw 8px 1vw;
+    max-width: 100vw;
+  }
+  canvas {
+    max-width: 97vw;
+    min-width: 0;
+    padding: 0;
+  }
+}
+
+body.dark {
+  background: #181818;
+  color: #e0e0e0;
+}
+
+body.dark .controls, body.dark .chart-controls, body.dark .main-controls {
+  background: #1d1d1d;
+  box-shadow: 0 2px 16px rgba(179,0,0,0.14);
+}
+
+body.dark h2, body.dark label {
+  color: #ff7070;
+}
+
+body.dark select {
+  background: #232323;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+body.dark button {
+  background: #222;
+  color: #ff7070;
+}
+
+body.dark button:hover {
+  background: #3c0e0e;
+}
+
+body.dark canvas {
+  background: #181818;
+  border-color: #333;
+}
+/* --- Styles pour le logo et le bouton de thème --- */
+
+.home-logo {
+  position: absolute; /* On le sort du flux normal de la page */
+  top: 15px;          /* On le place à 15px du haut */
+  left: 20px;         /* On le place à 20px de la gauche */
+}
+
+.home-logo img {
+  width: 50px;        /* On fixe la largeur de l'image */
+  height: 50px;       /* On fixe la hauteur de l'image */
+  border-radius: 50%; /* Pour la rendre parfaitement ronde */
+  object-fit: cover;  /* Assure que l'image remplit le cercle sans être déformée */
+  border: 2px solid #b30000; /* Ajoute une bordure pour le style */
+}
+
+#theme-toggle {
+  position: absolute; /* On le sort aussi du flux normal */
+  top: 15px;          /* On le place à 15px du haut */
+  right: 20px;        /* On le place à 20px de la droite */
+  font-size: 1.5rem;  /* On agrandit un peu l'icône */
+  background: none;   /* On enlève le fond par défaut */
+  border: none;       /* On enlève la bordure par défaut */
+  padding: 8px;
+}
+
+/* On ajuste la couleur du bouton de thème en mode sombre */
+body.dark #theme-toggle {
+    color: #ff7070;
+}
+
+  </style>
+</head>
+<body>
+  <button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">🌙</button>
+  <a href="index.html" class="home-logo">
+    <img src="images/neymar.jpg" alt="Accueil">
+  </a>
+  <h2>Compare Funding Rate APR (delta-neutre)</h2>
+  <div>
+    <label>Token:</label>
+    <select id="token"></select>
+    <label>Source A (Long):</label>
+    <select id="sourceA">
+      <option value="vest">Vest</option>
+      <option value="extended">Extended</option>
+      <option value="paradex">Paradex</option>
+      <option value="hyperliquid">Hyperliquid</option>
+    </select>
+    <label>Source B (Short):</label>
+    <select id="sourceB">
+      <option value="vest">Vest</option>
+      <option value="extended">Extended</option>
+      <option value="paradex">Paradex</option>
+      <option value="hyperliquid">Hyperliquid</option>
+    </select>
+    <button onclick="drawComparison()">Afficher le Chart</button>
+  </div>
+  <div id="charts">
+    <canvas id="fundingChart"></canvas>
+    <canvas id="aprChart"></canvas>
+  </div>
+
+  <script>
+    // Liste des tokens (tu peux remplacer par un fetch dynamique si tu veux)
+    const TOKENS = [
+      "AAVE", "ADA", "AI16Z", "AIXBT", "ALCH", "ANIME", "APT", "AR", "ARB", "ATOM", "AVAX", "BCH", "BERA", "BNB", "BRETT", "BTC",
+      "CRV", "DOGE", "DOT", "DYDX", "EIGEN", "ENA", "ETC", "ETH", "ETHFI", "EUR", "FARTCOIN", "FET", "FIL", "FTM", "GOAT",
+      "GRASS", "GRIFFAIN", "HYPE", "HYPER", "INIT", "INJ", "IO", "IP", "JTO", "JUP", "KAITO", "KBONK", "KFLOKI", "KNEIRO",
+      "KPEPE", "KSHIB", "LAUNCHCOIN", "LAYER", "LDO", "LINK", "LTC", "MATIC", "MELANIA", "MEME", "MEW", "MKR", "MNT",
+      "MOODENG", "MORPHO", "MOVE", "NEAR", "NIL", "NOT", "NXPC", "OM", "ONDO", "OP", "ORDI", "PAXG", "PENDLE", "PENGU", "PNUT",
+      "POPCAT", "PROMPT", "PYTH", "RENDER", "RESOLV", "RUNE", "S", "SCR", "SEI", "SOL", "SOPH", "SPX", "STRK", "SUI", "TAO", "TIA",
+      "TON", "TRB", "TRUMP", "TRX", "TST", "TURBO", "UNI", "USUAL", "VINE", "VIRTUAL", "VVV", "W", "WAL", "WCT", "WIF", "WLD",
+      "XLM", "XRP", "ZEREBRO", "ZK", "ZRO", "ZORA"
+    ];
+    const tokenSelect = document.getElementById('token');
+    TOKENS.forEach(tk => {
+      const opt = document.createElement('option');
+      opt.value = tk; opt.text = tk;
+      tokenSelect.appendChild(opt);
+    });
+    tokenSelect.value = "BTC";
+
+    let fundingChart, aprChart;
+
+    async function fetchFunding(token, source, days=40) {
+      const url = `/api/funding-history?symbol=${token}&source=${source}&days=${days}`;
+      const res = await fetch(url);
+      if (!res.ok) return [];
+      return await res.json();
+    }
+
+    async function drawComparison() {
+      const token = document.getElementById('token').value;
+      const sourceA = document.getElementById('sourceA').value;
+      const sourceB = document.getElementById('sourceB').value;
+      const days = 40;
+
+      // Fetch funding data
+      const [fundA, fundB] = await Promise.all([
+        fetchFunding(token, sourceA, days),
+        fetchFunding(token, sourceB, days)
+      ]);
+
+      // On ne garde que les jours communs, dates triées
+      const commonDates = fundA.map(x => x.date).filter(d => fundB.some(y => y.date === d));
+      commonDates.sort();
+
+      const ratesA = commonDates.map(d => Number(fundA.find(x => x.date === d)?.funding_rate ?? 0));
+      const ratesB = commonDates.map(d => Number(fundB.find(x => x.date === d)?.funding_rate ?? 0));
+
+      // Calcul de l’APR delta-neutre (long A, short B)
+      const aprs = commonDates.map((_, i) => ((-ratesA[i]) + ratesB[i]) * 24 * 365 * 100); // annualisé en %
+
+      // --- Chart Funding Rates ---
+      if (fundingChart) fundingChart.destroy();
+      fundingChart = new Chart(document.getElementById('fundingChart'), {
+        type: 'line',
+        data: {
+          labels: commonDates.map(d => d.slice(0, 10)),
+          datasets: [
+            {
+              label: `Funding rate ${token} (${sourceA}, long)`,
+              data: ratesA,
+              borderColor: 'rgb(255,99,132)', pointRadius: 0, tension: 0.3
+            },
+            {
+              label: `Funding rate ${token} (${sourceB}, short)`,
+              data: ratesB,
+              borderColor: 'rgb(54,162,235)', pointRadius: 0, tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'top' } },
+          scales: {
+            y: { title: { display: true, text: 'Funding rate' } },
+            x: { title: { display: true, text: 'Date' } }
+          }
+        }
+      });
+
+      // --- Chart APR delta-neutre ---
+      if (aprChart) aprChart.destroy();
+      aprChart = new Chart(document.getElementById('aprChart'), {
+        type: 'line',
+        data: {
+          labels: commonDates.map(d => d.slice(0, 10)),
+          datasets: [
+            {
+              label: `APR delta-neutre (Long ${sourceA}, Short ${sourceB}) (%)`,
+              data: aprs,
+              borderColor: 'rgb(34,197,94)', pointRadius: 2, tension: 0.2, fill: true,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'top' } },
+          scales: {
+            y: { title: { display: true, text: 'APR (%)' } },
+            x: { title: { display: true, text: 'Date' } }
+          }
+        }
+      });
+    }
+
+    // Initial draw
+    window.onload = drawComparison;
+  </script>
+  <script src="js/theme-toggle.js"></script>
+</body>
+</html>

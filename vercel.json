@@ -1,8 +1,0 @@
-{
-    "crons": [
-      {
-        "path": "/api/trigger-all-updates",
-        "schedule": "5 2 * * *"
-      }
-    ]
-  }
