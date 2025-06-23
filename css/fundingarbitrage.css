@@ -206,4 +206,77 @@ body {
   body.dark .theme-toggle:hover {
     color: #fff;
   }
-  
+  /* Style GHZ pour l'étoile favoris */
+span.fav {
+  color: #ddd;                 /* gris par défaut */
+  cursor: pointer;
+  font-size: 1.3em;
+  transition: color 0.18s, text-shadow 0.18s;
+  user-select: none;
+  vertical-align: middle;
+}
+span.fav.active {
+  color: #b30000;              /* rouge GHZ */
+  text-shadow: 0 0 8px #ffb3b3;
+}
+span.fav:hover {
+  color: #ff5c5c;
+  text-shadow: 0 0 10px #ff5c5c33;
+}
+
+/* Dark mode pour les favoris */
+body.dark span.fav {
+  color: #666;
+}
+body.dark span.fav.active {
+  color: #ff5c5c;
+  text-shadow: 0 0 10px #ff5c5c44;
+}
+body.dark span.fav:hover {
+  color: #ffe1e1;
+  text-shadow: 0 0 10px #ffcccc77;
+}
+/* Petites icônes pour exchanges dans l’entête et les actions */
+.ex-logo, .ex-logo-th {
+  height: 19px;
+  width: 19px;
+  vertical-align: middle;
+  margin-right: 3px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  background: #fff;
+}
+
+.ex-logo-th {
+  margin-bottom: -2px;
+}
+
+.ex-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-right: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.ex-checkbox input[type="checkbox"] {
+  accent-color: #b30000;
+  margin-right: 2px;
+  cursor: pointer;
+}
+
+/* Responsive (optionnel, déjà présent dans ton CSS de base) */
+@media (max-width: 700px) {
+  .ex-logo, .ex-logo-th { height: 16px; width: 16px; }
+  .actions { flex-direction: column; align-items: flex-start; }
+}
+.ex-logo-td {
+  height: 18px;
+  width: 18px;
+  margin-right: 4px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}

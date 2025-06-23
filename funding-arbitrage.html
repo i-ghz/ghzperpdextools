@@ -10,8 +10,6 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Funding Arbitrage Opportunities</title>
-  <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="icon" href="images/favicon-16.png" sizes="16x16" type="image/png">
   <link rel="stylesheet" href="css/fundingarbitrage.css"/>
 </head>
 <body>
@@ -19,31 +17,39 @@
   <a href="index.html" class="home-logo">
     <img src="images/neymar.jpg" alt="Accueil"/>
   </a>
-  <!-- Toggle thème si présent -->
   <button id="theme-toggle" class="theme-toggle">🌙</button>
 
   <div class="container">
     <h1>Funding Arbitrage Opportunities</h1>
-    <div class="actions">
+    <div class="actions" style="gap:12px;display:flex;align-items:center;flex-wrap:wrap;">
       <button id="sort-apr-btn" class="button">Sort by APR ↓</button>
       <button id="filter-fav-btn" class="button">Show favorites</button>
+      <span style="margin-left:16px;">Exchanges à afficher :</span>
+      <label class="ex-checkbox"><input type="checkbox" class="exchange-filter" value="vest" checked> <img src="images/vest.png" class="ex-logo" alt="Vest"> Vest</label>
+      <label class="ex-checkbox"><input type="checkbox" class="exchange-filter" value="paradex" checked> <img src="images/paradex.png" class="ex-logo" alt="Paradex"> Paradex</label>
+      <label class="ex-checkbox"><input type="checkbox" class="exchange-filter" value="ext" checked> <img src="images/extended.png" class="ex-logo" alt="Extended"> Extended</label>
+      <label class="ex-checkbox"><input type="checkbox" class="exchange-filter" value="hyperliquid" checked> <img src="images/hyperliquid.png" class="ex-logo" alt="Hyperliquid"> Hyperliquid</label>
     </div>
     <table id="arbitrage-table">
-        <thead>
-            <tr>
-              <th>★</th>
-              <th>Pair</th>
-              <th>Vest 1h</th>
-              <th>Paradex 1h</th>
-              <th>Extended 1h</th>
-              <th>Hyperliquid 1h</th>
-              <th>Strategy</th>
-              <th>APR</th>
-            </tr>
-          </thead>          
+      <thead>
+        <tr>
+          <th>★</th>
+          <th>Pair</th>
+          <th><img src="images/vest.png" class="ex-logo-th" alt="Vest"> Vest 1h</th>
+          <th><img src="images/paradex.png" class="ex-logo-th" alt="Paradex"> Paradex 1h</th>
+          <th><img src="images/extended.png" class="ex-logo-th" alt="Extended"> Extended 1h</th>
+          <th><img src="images/hyperliquid.png" class="ex-logo-th" alt="Hyperliquid"> Hyperliquid 1h</th>
+          <th>Strategy</th>
+          <th>APR</th>
+        </tr>
+      </thead>
       <tbody></tbody>
     </table>
   </div>
+
+  <footer style="text-align:center;margin-top:40px;margin-bottom:12px;color:#888;">
+    created by <a href="https://twitter.com/ilyessghz2" target="_blank" style="color:#22c55e;text-decoration:underline">@ilyessghz2</a>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="js/favorite.js"></script>

@@ -1,9 +1,21 @@
-// public/js/script-api.js
 const API_URL = "/api/funding";
-//const API_URL = "http://localhost:4000/api/funding";
 let dataStore = [];
 let filterFavOnly = false;
 
+// Table de correspondance des logos
+const EX_LOGOS = {
+  paradex:     'images/paradex.png',
+  vest:        'images/vest.png',
+  ext:         'images/extended.png',
+  hyperliquid: 'images/hyperliquid.png'
+};
+
+// Retourne la liste des exchanges sélectionnés (cochés)
+function getSelectedExchanges() {
+  return Array.from(document.querySelectorAll('.exchange-filter:checked')).map(cb => cb.value);
+}
+
+// Fetch les données (API)
 async function fetchFundingData() {
   try {
     const { data } = await axios.get(API_URL);
@@ -14,53 +26,75 @@ async function fetchFundingData() {
   }
 }
 
+// Rend le tableau dynamiquement selon les exchanges cochés
 function renderTable() {
   const tbody = document.querySelector("#arbitrage-table tbody");
   tbody.innerHTML = "";
 
+  const selectedExchanges = getSelectedExchanges();
+
+  // Update header dynamiquement selon exchanges cochés
+  const thead = document.querySelector("#arbitrage-table thead tr");
+  thead.innerHTML = `
+    <th>★</th>
+    <th>Pair</th>
+    ${selectedExchanges.map(dex => {
+      // Ajoute le logo dans le header aussi !
+      const label = {
+        vest: "Vest",
+        paradex: "Paradex",
+        ext: "Extended",
+        hyperliquid: "Hyperliquid"
+      }[dex];
+      return `<th><img src="${EX_LOGOS[dex]}" alt="${label}" class="ex-logo-td"> ${label} 1h</th>`;
+    }).join('')}
+    <th>Strategy</th>
+    <th>APR</th>
+  `;
+
   dataStore.forEach(o => {
     if (filterFavOnly && !window.favorites.isFav(o.symbol)) return;
 
-    // --- LOGIQUE MODIFIÉE ---
-    // 1. Rassembler tous les taux disponibles (non-null) pour la paire
+    // Liste tous les taux sélectionnés pour la paire
     const allRates = [
-      { dex: "Paradex",     rate: o.paradex1h },
-      { dex: "Vest",        rate: o.vest1h    },
-      { dex: "Extended",    rate: o.ext1h     },
-      { dex: "Hyperliquid", rate: o.hyperliquid1h },
-    ];
+      { dex: "paradex", label: "Paradex", rate: o.paradex1h },
+      { dex: "vest", label: "Vest", rate: o.vest1h },
+      { dex: "ext", label: "Extended", rate: o.ext1h },
+      { dex: "hyperliquid", label: "Hyperliquid", rate: o.hyperliquid1h },
+    ].filter(r => selectedExchanges.includes(r.dex));
+
+    // On ne garde que les taux non nuls
     const availableRates = allRates.filter(r => r.rate !== null);
 
-    // 2. S'il y a moins de 2 taux, on ne peut pas faire d'arbitrage, donc on ignore la paire.
-    if (availableRates.length < 2) {
-      return;
-    }
+    // Arbitrage que si au moins 2 exchanges valides
+    if (availableRates.length < 2) return;
 
-    // 3. Calculer la stratégie et l'APR uniquement sur les taux disponibles
     const minE = availableRates.reduce((a, b) => a.rate < b.rate ? a : b);
     const maxE = availableRates.reduce((a, b) => a.rate > b.rate ? a : b);
-    const strategy = `Long ${minE.dex}, Short ${maxE.dex}`;
+    const strategy = `Long ${minE.label}, Short ${maxE.label}`;
     const spread   = maxE.rate - minE.rate;
     const apr      = spread * 24 * 365 * 100;
-
     const favClass = window.favorites.isFav(o.symbol) ? "fav active" : "fav";
 
+    // Génère la ligne avec les bonnes colonnes seulement
     const row = document.createElement("tr");
-    // 4. Afficher les taux ou '—' s'ils sont manquants (null)
     row.innerHTML = `
       <td><span class="${favClass}" data-symbol="${o.symbol}" title="Favori">★</span></td>
       <td>${o.symbol}</td>
-      <td>${o.vest1h !== null ? o.vest1h.toFixed(6) : '—'}</td>
-      <td>${o.paradex1h !== null ? o.paradex1h.toFixed(6) : '—'}</td>
-      <td>${o.ext1h !== null ? o.ext1h.toFixed(6) : '—'}</td>
-      <td>${o.hyperliquid1h !== null ? o.hyperliquid1h.toFixed(6) : '—'}</td>
+      ${allRates.map(r =>
+        `<td>${
+          r.rate !== null
+            ? `<img src="${EX_LOGOS[r.dex]}" alt="${r.label}" class="ex-logo-td"> ${r.rate.toFixed(6)}`
+            : '—'
+        }</td>`
+      ).join('')}
       <td>${strategy}</td>
       <td>${apr.toFixed(2)}%</td>
     `;
     tbody.appendChild(row);
   });
 
-  // attacher clic sur étoiles
+  // Gère les favoris
   document.querySelectorAll("span.fav").forEach(el => {
     el.addEventListener("click", () => {
       window.favorites.toggle(el.dataset.symbol);
@@ -68,28 +102,41 @@ function renderTable() {
     });
   });
 
-  // mettre à jour l’état du bouton filtre
+  // Met à jour texte bouton fav
   document.getElementById("filter-fav-btn").textContent = filterFavOnly
     ? "Afficher Tout"
     : "Afficher Favoris";
 }
 
+// Tri APR
 document.getElementById("sort-apr-btn").addEventListener("click", () => {
   dataStore.sort((a, b) => {
-    const aprOf = o => {
-      const arr = [o.paradex1h, o.vest1h, o.ext1h, o.hyperliquid1h];
-      const validRates = arr.filter(rate => rate !== null);
-      if (validRates.length < 2) return 0;
-      return (Math.max(...validRates) - Math.min(...validRates)) * 24 * 365 * 100;
-    };
+    const selectedExchanges = getSelectedExchanges();
+    function aprOf(o) {
+      const arr = [
+        selectedExchanges.includes("paradex")     ? o.paradex1h     : null,
+        selectedExchanges.includes("vest")        ? o.vest1h        : null,
+        selectedExchanges.includes("ext")         ? o.ext1h         : null,
+        selectedExchanges.includes("hyperliquid") ? o.hyperliquid1h : null,
+      ].filter(rate => rate !== null);
+      if (arr.length < 2) return 0;
+      return (Math.max(...arr) - Math.min(...arr)) * 24 * 365 * 100;
+    }
     return aprOf(b) - aprOf(a);
   });
   renderTable();
 });
 
+// Filtre favoris
 document.getElementById("filter-fav-btn").addEventListener("click", () => {
   filterFavOnly = !filterFavOnly;
   renderTable();
 });
 
+// Met à jour le tableau si l'utilisateur (dé)coche un exchange
+document.querySelectorAll('.exchange-filter').forEach(cb =>
+  cb.addEventListener('change', renderTable)
+);
+
+// Charge initiale
 fetchFundingData();
