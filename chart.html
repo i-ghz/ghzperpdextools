@@ -1,57 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <title>Funding Rate Comparison</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delta-Neutral Funding Rate Chart</title>
+  <!-- Vercel Insights -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
   <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="images/favicon-16.png" sizes="16x16" type="image/png">
+  <!-- Bouton Mode Sombre/Clair -->
+  <button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">🌙</button>
+
+  <!-- Styles -->
   <link rel="stylesheet" href="css/chart.css">
-  <script defer src="/_vercel/insights/script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 </head>
 <body>
-  <button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">🌙</button>
+  <!-- Bouton retour accueil -->
   <a href="index.html" class="home-logo">
-    <img src="images/neymar.jpg" alt="Accueil">
+    <img src="images/neymar.jpg" alt="Accueil" style="max-width: 120px;">
   </a>
-  <h2>Compare Funding Rate APR (delta-neutral)</h2>
-  
-  <div class="controls">
-    <div class="main-row">
-      <label for="token">Token :</label>
-      <select id="token"></select>
-      <label for="sourceA">Source A (Long) :</label>
-      <select id="sourceA">
-        <option value="vest">Vest</option>
-        <option value="extended">Extended</option>
-        <option value="paradex">Paradex</option>
-        <option value="hyperliquid">Hyperliquid</option>
-      </select>
-      <label for="sourceB">Source B (Short) :</label>
-      <select id="sourceB">
-        <option value="vest">Vest</option>
-        <option value="extended">Extended</option>
-        <option value="paradex">Paradex</option>
-        <option value="hyperliquid">Hyperliquid</option>
-      </select>
-      <button onclick="drawComparison()">Show Chart</button>
+
+  <div class="container">
+    <h2>Delta-Neutral Funding Rate Chart</h2>
+
+    <div id="chart-controls">
+      <label>Token:
+        <select id="token"></select> <!-- Le select pour les tokens est désormais rempli dynamiquement -->
+      </label>
+
+      <label>Source A (Long):
+        <select id="sourceA">
+          <option value="vest">Vest</option>
+          <option value="extended">Extended</option>
+          <option value="paradex">Paradex</option>
+          <option value="hyperliquid">Hyperliquid</option>
+        </select>
+      </label>
+
+      <label>Source B (Short):
+        <select id="sourceB">
+          <option value="vest">Vest</option>
+          <option value="extended">Extended</option>
+          <option value="paradex">Paradex</option>
+          <option value="hyperliquid">Hyperliquid</option>
+        </select>
+      </label>
+
+      <button id="showChart">Afficher le Chart</button>
     </div>
-    <div class="ma-row">
-      <label for="ma-window" class="ma-label">Moving Average</label>
-      <select id="ma-window">
-        <option value="0">none</option>
-        <option value="7">7 days</option>
-        <option value="30" selected>30 days</option>
-      </select>
-    </div>
+
+    <select id="ma-window">
+      <option value="1">1j</option>
+      <option value="2">2j</option>
+      <option value="7" selected>7j</option>
+      <option value="30">30j</option>
+    </select>
+
+    <div id="fundingChart"></div>
   </div>
 
-  <div id="charts">
-    <canvas id="fundingChart"></canvas>
-    <canvas id="aprChart"></canvas>
-  </div>
-
+  <script type="module" src="js/chart.js"></script>
   <script src="js/theme-toggle.js"></script>
-  <script src="js/fundingchart.js"></script>
 </body>
 </html>
