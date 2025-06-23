@@ -1,50 +1,53 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyse Funding (TradingView)</title>
-    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; padding: 20px; line-height: 1.5; }
-        .controls { margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; }
-        .chart-container { width: 100%; height: 450px; margin-top: 10px; border: 1px solid #eee; }
-        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        select, button { padding: 8px; font-size: 1em; margin-right: 15px; }
-    </style>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="images/favicon-16.png" sizes="16x16" type="image/png">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Funding Arbitrage Opportunities</title>
+  <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="images/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="stylesheet" href="css/fundingarbitrage.css"/>
 </head>
 <body>
-    <h1>Analyse de Funding (Mode TradingView)</h1>
+  <!-- Bouton “home” -->
+  <a href="index.html" class="home-logo">
+    <img src="images/neymar.jpg" alt="Accueil"/>
+  </a>
+  <!-- Toggle thème si présent -->
+  <button id="theme-toggle" class="theme-toggle">🌙</button>
 
-    <div class="controls">
-        <label for="tokenSelect">Token:</label>
-        <select id="tokenSelect"></select>
-        <label for="sourceASelect">Source A (Long):</label>
-        <select id="sourceASelect">
-            <option value="vest">Vest</option>
-            <option value="extended">Extended</option>
-            <option value="paradex">Paradex</option>
-            <option value="hyperliquid" selected>Hyperliquid</option>
-        </select>
-        <label for="sourceBSelect">Source B (Short):</label>
-        <select id="sourceBSelect">
-            <option value="vest" selected>Vest</option>
-            <option value="extended">Extended</option>
-            <option value="paradex">Paradex</option>
-            <option value="hyperliquid">Hyperliquid</option>
-        </select>
-        <button id="runButton">Analyser</button>
+  <div class="container">
+    <h1>Funding Arbitrage Opportunities</h1>
+    <div class="actions">
+      <button id="sort-apr-btn" class="button">Sort by APR ↓</button>
+      <button id="filter-fav-btn" class="button">Show favorites</button>
     </div>
+    <table id="arbitrage-table">
+        <thead>
+            <tr>
+              <th>★</th>
+              <th>Pair</th>
+              <th>Vest 1h</th>
+              <th>Paradex 1h</th>
+              <th>Extended 1h</th>
+              <th>Hyperliquid 1h</th>
+              <th>Strategy</th>
+              <th>APR</th>
+            </tr>
+          </thead>          
+      <tbody></tbody>
+    </table>
+  </div>
 
-    <h2>Taux de Funding Bruts</h2>
-    <div id="funding-chart-container" class="chart-container"></div>
-    
-    <h2>APR de la Stratégie Delta-Neutre</h2>
-    <div id="apr-chart-container" class="chart-container"></div>
-
-    <script src="js/tradingview-chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/favorite.js"></script>
+  <script src="js/script-api.js"></script>
+  <script src="js/theme-toggle.js"></script>
 </body>
-<footer style="text-align:center; margin: 32px 0 16px 0; color: #bcbcbc; font-size: 15px;">
-  created by <a href="https://twitter.com/ilyessghz2" target="_blank" rel="noopener" style="color:#22aaff;">@ilyessghz2</a>
-</footer>
 </html>
