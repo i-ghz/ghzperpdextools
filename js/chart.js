@@ -55,7 +55,7 @@ function calculateMovingAverageSeriesData(data, maLength) {
 }
 
 // Fetch, formate (timestamp seconds, value)
-async function fetchFunding(token, source, days = 40) {
+async function fetchFunding(token, source, days = 50) {
   const url = `/api/funding-history?symbol=${token}&source=${source}&days=${days}`;
   const res = await fetch(url);
   if (!res.ok) return [];

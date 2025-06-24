@@ -41,8 +41,8 @@ function renderTable() {
     ${selectedExchanges.map(dex => {
       // Ajoute le logo dans le header aussi !
       const label = {
-        vest: "Vest",
         paradex: "Paradex",
+        vest: "Vest",
         ext: "Extended",
         hyperliquid: "Hyperliquid"
       }[dex];
