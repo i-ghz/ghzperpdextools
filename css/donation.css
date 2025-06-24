@@ -1,0 +1,200 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #fff;
+    color: #232323;
+    min-height: 100vh;
+  }
+  
+  .container {
+    max-width: 500px;
+    margin: 48px auto 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 3px 24px rgba(179,0,0,0.09);
+    padding: 36px 28px 36px 28px;
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    color: #b30000;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 18px;
+    letter-spacing: 0.01em;
+  }
+  
+  .donate-title {
+    font-size: 1.16rem;
+    color: #444;
+    margin-bottom: 22px;
+  }
+  
+  .donate-card {
+    margin: 0 auto;
+    padding: 24px 14px 18px 14px;
+    background: #faf7f7;
+    border-radius: 14px;
+    box-shadow: 0 1px 8px rgba(179,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: flex-start;
+    max-width: 430px;
+  }
+  
+  .donate-addr-block {
+    width: 100%;
+    margin-bottom: 0;
+  }
+  
+  .donate-label {
+    font-size: 1.04em;
+    font-weight: bold;
+    color: #b30000;
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+    gap: 7px;
+  }
+  
+  .donate-coin-logo {
+    height: 22px;
+    width: 22px;
+    vertical-align: middle;
+    margin-right: 7px;
+    margin-bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    border: 1.2px solid #eee;
+  }
+  
+  .donate-addr {
+    font-family: monospace;
+    font-size: 1.05em;
+    background: #fff;
+    color: #2b2b2b;
+    padding: 7px 11px;
+    border-radius: 7px;
+    border: 1.2px dashed #e7dddd;
+    display: inline-block;
+    margin-right: 7px;
+    margin-top: 2px;
+    user-select: all;
+    letter-spacing: 0.02em;
+  }
+  
+  .copy-btn {
+    background: #fff;
+    border: 2px solid #b30000;
+    color: #b30000;
+    border-radius: 7px;
+    font-weight: bold;
+    font-size: 0.97em;
+    padding: 5px 20px;
+    margin-left: 3px;
+    cursor: pointer;
+    transition: background 0.14s, color 0.14s, border 0.14s;
+  }
+  .copy-btn:hover {
+    background: #b30000;
+    color: #fff;
+    border-color: #b30000;
+  }
+  .copy-success {
+    color: #13d375;
+    margin-left: 10px;
+    font-size: 0.97em;
+    display: none;
+  }
+  
+  footer {
+    text-align: center;
+    margin-top: 38px;
+    margin-bottom: 16px;
+    color: #888;
+    font-size: 1em;
+  }
+  footer a {
+    color: #b30000;
+    text-decoration: underline;
+    font-weight: 600;
+  }
+  
+  .theme-toggle {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 20;
+    color: #b30000;
+    transition: color 0.15s;
+  }
+  .theme-toggle:hover {
+    color: #e60000;
+  }
+  
+  .home-logo {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 20;
+    display: block;
+  }
+  .home-logo img {
+    height: 38px;
+    width: auto;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  
+  /* Responsive */
+  @media (max-width: 600px) {
+    .container { padding: 9px 1vw 12px 1vw; }
+    .donate-card { padding: 12px 2vw 10px 2vw; }
+    .theme-toggle, .home-logo { top: 10px; left: 10px; right: unset; }
+    .donate-coin-logo { height: 18px; width: 18px; }
+  }
+  
+  /* Dark mode */
+  body.dark {
+    background: #181818;
+    color: #ededed;
+  }
+  body.dark .container {
+    background: #222;
+    box-shadow: 0 3px 18px rgba(179,0,0,0.17);
+  }
+  body.dark .donate-card {
+    background: #232324;
+    box-shadow: 0 1px 14px rgba(179,0,0,0.11);
+  }
+  body.dark h1, body.dark .donate-label { color: #ff5c5c; }
+  body.dark .donate-addr {
+    background: #191919;
+    color: #ededed;
+    border-color: #363636;
+  }
+  body.dark .copy-btn {
+    background: #181818;
+    border-color: #ff5c5c;
+    color: #ff5c5c;
+  }
+  body.dark .copy-btn:hover {
+    background: #ff5c5c;
+    color: #19191a;
+  }
+  body.dark .donate-coin-logo {
+    background: #191919;
+    border: 1.2px solid #232324;
+  }
+  body.dark footer a { color: #ff5c5c; }
+  body.dark .theme-toggle { color: #ff5c5c; }
+  body.dark .theme-toggle:hover { color: #fff; }
+  

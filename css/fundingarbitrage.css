@@ -280,3 +280,124 @@ body.dark span.fav:hover {
   position: relative;
   top: -1px;
 }
+/* Card arbitrage pop-in */
+#card-modal {
+  position: fixed;
+  left:0; top:0; width:100vw; height:100vh;
+  z-index: 1000;
+}
+.arb-card-bg {
+  position: fixed;
+  left:0; top:0; width:100vw; height:100vh;
+  background: rgba(10,0,0,0.75);
+  z-index: 1;
+}
+.arb-card-ghz {
+  position: fixed;
+  left:50%; top:50%; transform:translate(-50%,-50%);
+  background: #191b1f;
+  color: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 32px #b3000030, 0 0 0 3px #b3000010;
+  min-width: 380px; max-width: 94vw;
+  padding: 30px 36px 28px 36px;
+  z-index: 20;
+  font-family: inherit;
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.arb-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; margin-bottom: 22px;
+}
+.arb-token {
+  width: 48px; height: 48px; border-radius: 50%; box-shadow: 0 0 0 4px #fff3, 0 1px 12px #b3000030;
+  margin-right: 16px;
+  background: #fff;
+  object-fit: contain;
+}
+.arb-card-pair {
+  color: #ff5c5c; font-size: 1.5em; font-weight: bold; margin-right: auto;
+  letter-spacing: 0.02em;
+}
+.arb-card-date {
+  font-size: 1.09em; color: #aaa; margin-left: 18px;
+}
+.arb-card-positions {
+  display: flex; gap: 24px; margin-bottom: 16px;
+}
+.arb-long, .arb-short {
+  display: flex; align-items: center; font-size: 1.18em; font-weight: bold; padding: 6px 20px; border-radius: 12px;
+}
+.arb-long  { background: #143f1e; color: #21e686; border: 2px solid #2ecc40;}
+.arb-short { background: #321112; color: #ff5c5c; border: 2px solid #b30000; }
+.arb-card-apr {
+  margin-bottom: 10px; font-size: 1.25em;
+}
+.arb-card-apr span:first-child { color: #aaa; margin-right: 6px;}
+.arb-apr { color: #21e686; font-weight: bold; font-size: 1.22em;}
+.arb-card-rates {
+  font-size: 1.08em;
+  color: #eee;
+  margin-bottom: 28px;
+}
+.arb-card-rates span {
+  margin-right: 20px;
+}
+.arb-card-share {
+  margin-top: 6px;
+  padding: 12px 38px;
+  background: none;
+  border: 2px solid #ff5c5c;
+  color: #ff5c5c;
+  font-weight: bold;
+  border-radius: 10px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background 0.14s, color 0.14s;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 12px #b3000025;
+}
+.arb-card-share:hover {
+  background: #ff5c5c; color: #181818;
+}
+.arb-card-close {
+  position: absolute; top: 17px; right: 19px; background: none;
+  border: none; color: #ff5c5c; font-size: 2.2em; font-weight: bold; cursor: pointer; z-index: 30;
+  opacity: 0.74; transition: opacity 0.12s;
+}
+.arb-card-close:hover { opacity: 1; }
+
+@media (max-width: 650px) {
+  .arb-card-ghz { min-width: 96vw; padding: 11vw 3vw 10vw 3vw; }
+  .arb-card-header { flex-direction: column; align-items: flex-start;}
+  .arb-card-date { margin: 7px 0 0 0;}
+}
+.share-icon-btn {
+  height: 26px;
+  width: 26px;
+  filter: drop-shadow(0 0 4px #b3000022);
+  transition: filter 0.13s;
+  vertical-align: middle;
+  pointer-events: none; /* le clic reste sur le bouton */
+}
+button.share-btn:hover .share-icon-btn,
+.arb-card-share:hover img {
+  filter: drop-shadow(0 0 6px #ff5c5c88) brightness(1.2);
+}
+button.share-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+.arb-card-ghz a {
+  color: inherit;        /* Prend la couleur du parent */
+  text-decoration: none; /* Retire le soulignement */
+  font-weight: 600;
+  transition: color 0.15s;
+}
+
+.arb-card-ghz a:hover {
+  color: #b30000; /* Met un rouge GHZ au hover */
+  text-decoration: underline;
+}

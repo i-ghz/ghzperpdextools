@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support GHZ PerpDEX Toolbox</title>
+  <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="images/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="stylesheet" href="css/donation.css">
+</head>
+<body>
+  <!-- Dark mode toggle -->
+  <button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">🌙</button>
+  <!-- Home logo -->
+  <a href="index.html" class="home-logo">
+    <img src="images/neymar.jpg" alt="Accueil">
+  </a>
+  <div class="container">
+    <h1>Support the Project</h1>
+    <div class="donate-title">
+      If you enjoy using <b>GHZ PerpDEX Toolbox</b> and want to support its continued development,<br>
+      you can donate crypto below. Every contribution helps keep the site live and free! 🙏
+    </div>
+    <div class="donate-card">
+      <div class="donate-addr-block">
+        <div class="donate-label">
+          <img src="images/eth.png" alt="Ethereum" class="donate-coin-logo">
+          EVM/ETH/BSC/Arbitrum/Polygon
+        </div>
+        <span class="donate-addr" id="evm-addr">0xB135D40581404474Beca15Ba408E2E67A178b4cd</span>
+        <button class="copy-btn" data-copy="evm-addr">Copy</button>
+        <span class="copy-success" id="evm-success">Copied!</span>
+      </div>
+      <div class="donate-addr-block">
+        <div class="donate-label">
+          <img src="images/btc.png" alt="Bitcoin" class="donate-coin-logo">
+          Bitcoin
+        </div>
+        <span class="donate-addr" id="btc-addr">bc1qvca83xjd996ca7p77snvuwh4u03vaxfxjcny0y</span>
+        <button class="copy-btn" data-copy="btc-addr">Copy</button>
+        <span class="copy-success" id="btc-success">Copied!</span>
+      </div>
+    </div>
+  </div>
+  <footer style="text-align:center;margin-top:40px;margin-bottom:12px;color:#888;">
+    created by 
+    <a href="https://twitter.com/ilyessghz2" target="_blank" style="color:#b30000;text-decoration:underline;font-weight:600;">@ilyessghz2</a>
+    &nbsp;|&nbsp;
+    <a href="donation.html" style="color:#b30000;text-decoration:underline;font-weight:600;">💸 Donate here</a>
+  </footer>
+  <!-- JS for dark mode and copy buttons -->
+  <script>
+    // DARK MODE
+    const themeBtn = document.getElementById('theme-toggle');
+    themeBtn.onclick = () => {
+      document.body.classList.toggle('dark');
+      themeBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+      localStorage.setItem('ghz-theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    };
+    // Init dark mode from storage
+    if (localStorage.getItem('ghz-theme') === 'dark') {
+      document.body.classList.add('dark');
+      themeBtn.textContent = '☀️';
+    }
+    // COPY BUTTONS
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.onclick = function() {
+        const id = btn.getAttribute('data-copy');
+        const addr = document.getElementById(id).textContent;
+        navigator.clipboard.writeText(addr).then(() => {
+          // Show success
+          document.getElementById(id.replace('-addr', '-success')).style.display = "inline";
+          setTimeout(() => {
+            document.getElementById(id.replace('-addr', '-success')).style.display = "none";
+          }, 1400);
+        });
+      };
+    });
+  </script>
+</body>
+</html>
