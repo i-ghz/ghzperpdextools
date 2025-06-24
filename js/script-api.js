@@ -22,7 +22,7 @@ async function fetchFundingData() {
     dataStore = data;
     renderTable();
   } catch (err) {
-    console.error("Erreur fetch :", err);
+    console.error("Error fetch :", err);
   }
 }
 
@@ -104,8 +104,8 @@ function renderTable() {
 
   // Met à jour texte bouton fav
   document.getElementById("filter-fav-btn").textContent = filterFavOnly
-    ? "Afficher Tout"
-    : "Afficher Favoris";
+    ? "Show Everything"
+    : "Show Favorites";
 }
 
 // Tri APR
