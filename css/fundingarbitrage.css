@@ -401,3 +401,42 @@ button.share-btn {
   color: #b30000; /* Met un rouge GHZ au hover */
   text-decoration: underline;
 }
+/* Pastille Risk */
+.risk-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #888;
+  position: relative;
+  cursor: default;
+}
+.dot--red    { background: #e60000; }
+.dot--yellow { background: #ffaa00; }
+.dot--green  { background: #1c832b; }
+.dot--gray   { background: #555; }
+.dot--loading {
+  background: #ccc;
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0.4; }
+}
+
+/* Tooltip */
+.risk-dot:hover::after {
+  content: attr(data-spread) "% spread\n" attr(data-liquidity) " USD depth";
+  white-space: pre;
+  position: absolute;
+  top: -6px;
+  left: 16px;
+  padding: 6px;
+  background: #222;
+  color: #fff;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}

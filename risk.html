@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Risk Meter • GHZ PerpDEX Toolbox</title>
+  <script>
+    window.va = window.va || function(){ (window.vaq = window.vaq||[]).push(arguments) };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/risk.css">
+</head>
+<body>
+  <!-- Bouton Dark Mode -->
+  <button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">🌙</button>
+  <!-- Bouton retour accueil -->
+  <a href="index.html" class="home-logo"><img src="images/neymar.jpg" alt="Accueil"></a>
+
+  <div class="container">
+    <h1>Risk Meter</h1>
+
+    <div class="risk-form">
+      <label for="token-select">Token</label>
+      <select id="token-select">
+        <option value="">— Choose —</option>
+      </select>
+
+      <label for="exchange-select">Plateforme</label>
+      <select id="exchange-select">
+        <option value="vest">Vest</option>
+        <option value="paradex">Paradex</option>
+        <option value="ext">Extended</option>
+      </select>
+
+      <button id="check-btn" class="button">Vérifier</button>
+    </div>
+
+    <div id="result" class="risk-result"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/risk.js"></script>
+  <script src="js/theme-toggle.js"></script>
+</body>
+<footer>
+  created by <a href="https://twitter.com/ilyessghz2" target="_blank">@ilyessghz2</a>
+  | <a href="donation.html">💸 Donate here</a>
+</footer>
+</html>

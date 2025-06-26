@@ -1,0 +1,252 @@
+/* ====== Global ====== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #fff;
+    color: #333;
+    min-height: 100vh;
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: 45px auto 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 3px 24px rgba(179,0,0,0.08);
+    padding: 30px 30px 36px 30px;
+    text-align: center;
+  }
+  
+  h1 {
+    margin-top: 0;
+    font-size: 2.2rem;
+    color: #b30000;
+    letter-spacing: 0.01em;
+  }
+  
+  /* ====== Formulaire ====== */
+  .risk-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  
+  .risk-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #555;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .risk-form select {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 2px solid #b30000;
+    border-radius: 8px;
+    min-width: 180px;
+    background: #fff;
+    color: #333;
+    transition: border-color 0.2s;
+  }
+  
+  .risk-form select:focus {
+    border-color: #e60000;
+  }
+  
+  /* ====== Bouton ====== */
+  .button,
+  #check-btn {
+    display: inline-block;
+    padding: 18px 42px;
+    border-radius: 11px;
+    background: #fff;
+    border: 2px solid #b30000;
+    color: #b30000;
+    font-weight: bold;
+    font-size: 1.11rem;
+    text-decoration: none;
+    box-shadow: 0 2px 12px rgba(179,0,0,0.06);
+    cursor: pointer;
+    transition: background 0.14s, color 0.14s, border 0.14s, transform 0.1s;
+  }
+  
+  #check-btn:hover {
+    background: #b30000;
+    color: #fff;
+    border-color: #b30000;
+  }
+  
+  #check-btn:active {
+    transform: scale(0.98);
+  }
+  
+  /* ====== Résultat ====== */
+  .risk-result {
+    margin-top: 24px;
+    background: #fafafa;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    color: #222;
+  }
+  
+  .risk-result p {
+    margin: 8px 0;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  
+  /* ====== Ligne Risk ====== */
+  .risk-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  
+  .risk-text {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0 8px;
+    color: #333;
+  }
+  
+  .risk-dot {
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  
+  /*FOOTER*/
+  footer {
+    margin: 40px 0 12px;
+    padding: 0;
+    text-align: center;    /* centrer le footer */
+    color: #888;
+  }
+  
+  /* On reprend ta base pour les liens */
+  footer a {
+    text-decoration: underline;
+    font-weight: 600;
+    margin: 0 0.5em;
+  }
+  
+  /* Spécifique pour @ilyessghz2 : rouge */
+  footer a[href*="twitter.com"] {
+    color: #dc2626;
+  }
+  footer a[href*="twitter.com"]:hover {
+    color: #b91c1c;
+  }
+  
+  /* Spécifique pour “Donate here” : vert */
+  footer a[href*="donation.html"] {
+    color: #22c55e;
+  }
+  footer a[href*="donation.html"]:hover {
+    color: #1e9a4e;
+  }
+  
+  
+  
+  
+  /* ====== Theme Toggle & Home Logo ====== */
+  .theme-toggle {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 2.1rem;
+    cursor: pointer;
+    z-index: 20;
+    color: #b30000;
+    transition: color 0.15s;
+  }
+  .theme-toggle:hover {
+    color: #e60000;
+  }
+  
+  .home-logo {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 20;
+  }
+  .home-logo img {
+    height: 38px;
+    width: auto;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  
+  /* ====== Responsive ====== */
+  @media (max-width: 900px) {
+    .container {
+      padding: 16px 4vw 20px 4vw;
+      max-width: 99vw;
+    }
+    .risk-form {
+      gap: 12px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .container {
+      padding: 8px 1vw 10px 1vw;
+    }
+    .theme-toggle, .home-logo {
+      top: 10px;
+      left: 10px;
+    }
+  }
+  
+  body.dark {
+    background: #181818;
+    color: #ededed;
+  }
+  body.dark .container {
+    background: #232324;
+    box-shadow: 0 3px 24px rgba(179,0,0,0.23);
+  }
+  body.dark h1 {
+    color: #ff5c5c;
+  }
+  body.dark .risk-form select {
+    background: #2a2a2b;
+    border-color: #ff5c5c;
+    color: #fff;
+  }
+  body.dark #check-btn {
+    background: #19191a;
+    border-color: #ff5c5c;
+    color: #ff5c5c;
+    box-shadow: 0 2px 12px rgba(179,0,0,0.18);
+  }
+  body.dark #check-btn:hover {
+    background: #ff5c5c;
+    color: #19191a;
+  }
+  body.dark .theme-toggle {
+    color: #ff5c5c;
+  }
+  body.dark .theme-toggle:hover {
+    color: #fff;
+  }
+  body.dark .risk-result {
+    background: #2a2a2b;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    color: #eee;
+  }
+  body.dark .risk-text {
+    color: #ddd;
+  }
+  
