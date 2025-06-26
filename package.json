@@ -11,7 +11,8 @@
     "csv-writer": "^1.6.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "lightweight-charts": "^5.0.7"
+    "lightweight-charts": "^5.0.7",
+    "openai": "^5.7.0"
   },
   "scripts": {
     "postinstall": "echo '--- Verification manuelle des modules ---' && ls -la node_modules/axios/dist/node && echo '--- Fin de la verification ---'"
