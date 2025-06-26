@@ -108,6 +108,7 @@ function renderTable() {
           <img src="images/shares.svg" alt="Share" class="share-icon-btn" style="width:24px;height:24px;" />
         </button>
       </td>
+      
     `;
     tbody.appendChild(row);
   });
