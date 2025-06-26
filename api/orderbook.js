@@ -1,5 +1,4 @@
 // pages/api/orderbook.js
-//fix le bug lol
 import axios from 'axios';
 
 export default async function handler(req, res) {
@@ -9,36 +8,34 @@ export default async function handler(req, res) {
   }
 
   let pair, url, parseFn;
-
   switch (exchange) {
     case 'vest':
       pair = `${token}-PERP`;
-      url = `https://serverprod.vest.exchange/v2/depth?symbol=${pair}&limit=2`;
+      url = `https://serverprod.vest.exchange/v2/depth?symbol=${pair}&limit=1`;
       parseFn = data => {
-        // take up to two bids/asks
-        const bids = (data.bids || []).slice(0, 2);
-        const asks = (data.asks || []).slice(0, 2);
-        // sum qty and weighted price if you like, but here we'll just total qty
-        const bidQty = bids.reduce((sum, [,q]) => sum + parseFloat(q), 0);
-        const askQty = asks.reduce((sum, [,q]) => sum + parseFloat(q), 0);
-        // pick best price
-        const bidPrice = parseFloat(bids[0]?.[0] || 0);
-        const askPrice = parseFloat(asks[0]?.[0] || 0);
-        return { bidPrice, bidQty, askPrice, askQty };
+        const [bp, bq] = (data.bids && data.bids[0]) || [];
+        const [ap, aq] = (data.asks && data.asks[0]) || [];
+        return {
+          bidPrice: parseFloat(bp),
+          bidQty:   parseFloat(bq),
+          askPrice: parseFloat(ap),
+          askQty:   parseFloat(aq),
+        };
       };
       break;
 
     case 'paradex':
       pair = `${token}-USD-PERP`;
-      url = `https://api.prod.paradex.trade/v1/orderbook/${pair}?depth=2`;
+      url = `https://api.prod.paradex.trade/v1/orderbook/${pair}?depth=1`;
       parseFn = data => {
-        const bids = (data.bids || []).slice(0, 2);
-        const asks = (data.asks || []).slice(0, 2);
-        const bidQty = bids.reduce((s, [p,q]) => s + parseFloat(q), 0);
-        const askQty = asks.reduce((s, [p,q]) => s + parseFloat(q), 0);
-        const bidPrice = parseFloat(bids[0]?.[0] || 0);
-        const askPrice = parseFloat(asks[0]?.[0] || 0);
-        return { bidPrice, bidQty, askPrice, askQty };
+        const [bp, bq] = (data.bids && data.bids[0]) || [];
+        const [ap, aq] = (data.asks && data.asks[0]) || [];
+        return {
+          bidPrice: parseFloat(bp),
+          bidQty:   parseFloat(bq),
+          askPrice: parseFloat(ap),
+          askQty:   parseFloat(aq),
+        };
       };
       break;
 
@@ -46,13 +43,14 @@ export default async function handler(req, res) {
       pair = `${token}-USD`;
       url = `https://api.extended.exchange/api/v1/info/markets/${pair}/orderbook`;
       parseFn = data => {
-        const bids = (data.data.bid || []).slice(0, 2);
-        const asks = (data.data.ask || []).slice(0, 2);
-        const bidQty = bids.reduce((s, lvl) => s + parseFloat(lvl.qty), 0);
-        const askQty = asks.reduce((s, lvl) => s + parseFloat(lvl.qty), 0);
-        const bidPrice = parseFloat(bids[0]?.price || 0);
-        const askPrice = parseFloat(asks[0]?.price || 0);
-        return { bidPrice, bidQty, askPrice, askQty };
+        const bid = (data.data.bid && data.data.bid[0]) || {};
+        const ask = (data.data.ask && data.data.ask[0]) || {};
+        return {
+          bidPrice: parseFloat(bid.price),
+          bidQty:   parseFloat(bid.qty),
+          askPrice: parseFloat(ask.price),
+          askQty:   parseFloat(ask.qty),
+        };
       };
       break;
 
@@ -61,15 +59,24 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { data } = await axios.get(url);
-    const { bidPrice, bidQty, askPrice, askQty } = parseFn(data);
+    console.log(`📡 [orderbook] fetching ${exchange} ${pair} → ${url}`);
+    const response = await axios.get(url, { timeout: 10000 });
+    console.log('✅ [orderbook] remote data:', response.data);
+
+    const { bidPrice, bidQty, askPrice, askQty } = parseFn(response.data);
+    if (![bidPrice, bidQty, askPrice, askQty].every(v => typeof v === 'number' && !isNaN(v))) {
+      throw new Error('invalid orderbook payload');
+    }
+
     const spread    = askPrice - bidPrice;
     const liquidity = Math.min(bidPrice * bidQty, askPrice * askQty);
-    if (![bidPrice, bidQty, askPrice, askQty].every(v=>v>0)) {
-      throw new Error('invalid orderbook data');
-    }
     return res.status(200).json({ bidPrice, bidQty, askPrice, askQty, spread, liquidity });
+
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    // log the upstream error so you can inspect it in Vercel’s logs
+    console.error('❌ [orderbook] error:', err.response?.data || err.message);
+    const status  = err.response?.status || 500;
+    const message = err.response?.data?.error || err.message;
+    return res.status(status).json({ error: message });
   }
 }
