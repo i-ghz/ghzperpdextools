@@ -46,13 +46,17 @@ module.exports = async (req, res) => {
     }
 
     case 'ext': {
+      // Format correct pour Extended selon la documentation
       const pair = `${token}-USD`;
-      url = `https://api.extended.exchange/api/v1/info/${pair}/orderbook`;
+      url = `https://api.extended.exchange/api/v1/info/markets/${pair}/orderbook`;
       parseFn = data => {
+        // Structure selon la documentation Extended
         const bids = data.data?.bid;
         const asks = data.data?.ask;
+        
         if (!Array.isArray(bids) || !bids.length) throw new Error('empty orderbook');
         if (!Array.isArray(asks) || !asks.length) throw new Error('empty orderbook');
+        
         return {
           bidPrice: parseFloat(bids[0].price),
           bidQty:   parseFloat(bids[0].qty),
@@ -67,20 +71,42 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'unsupported exchange' });
   }
 
+  // Pour vest et paradex
   try {
+    console.log(`Fetching from ${exchange}: ${url}`);
     const { data } = await axios.get(url, { timeout: 15000 });
     const { bidPrice, bidQty, askPrice, askQty } = parseFn(data);
 
-    const spread    = askPrice - bidPrice;
+    const spread = askPrice - bidPrice;
     const liquidity = Math.min(bidPrice * bidQty, askPrice * askQty);
 
     return res.status(200).json({ bidPrice, bidQty, askPrice, askQty, spread, liquidity });
   } catch (err) {
-    console.error(err.response?.data || err.message);
-    // Si ordre vide, on renvoie 404 pour que le front puisse l'afficher proprement
-    if (err.message === 'empty orderbook') {
-      return res.status(404).json({ error: 'orderbook empty for this token/exchange' });
+    console.error(`${exchange} API error:`, err.response?.data || err.message);
+    
+    // Gestion d'erreurs spécifiques
+    if (err.response?.status === 404) {
+      return res.status(404).json({ 
+        error: `Token ${token} not found on ${exchange}`,
+        details: err.response?.data 
+      });
     }
-    return res.status(500).json({ error: err.message });
+    
+    if (err.message === 'empty orderbook') {
+      return res.status(404).json({ 
+        error: `Empty orderbook for ${token} on ${exchange}` 
+      });
+    }
+    
+    if (err.code === 'ECONNABORTED' || err.message.includes('timeout')) {
+      return res.status(408).json({ 
+        error: `Timeout fetching data from ${exchange}` 
+      });
+    }
+    
+    return res.status(500).json({ 
+      error: `Failed to fetch from ${exchange}`,
+      details: err.response?.data || err.message
+    });
   }
 };
