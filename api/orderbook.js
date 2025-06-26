@@ -1,5 +1,5 @@
 // pages/api/orderbook.js
-import axios from 'axios';
+const axios = require('axios');
 
 export default async function handler(req, res) {
   const { exchange, token } = req.query;
@@ -7,17 +7,20 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'exchange and token are required' });
   }
 
-  let url, parseFn;
+  let url;
+  let parseFn;
 
   switch (exchange) {
     case 'vest': {
       const pair = `${token}-PERP`;
       url = `https://serverprod.vest.exchange/v2/depth?symbol=${pair}&limit=1`;
       parseFn = data => {
-        if (!Array.isArray(data.bids) || !data.bids.length) throw new Error('empty orderbook');
-        if (!Array.isArray(data.asks) || !data.asks.length) throw new Error('empty orderbook');
-        const [bp, bq] = data.bids[0];
-        const [ap, aq] = data.asks[0];
+        const bids = data.bids;
+        const asks = data.asks;
+        if (!Array.isArray(bids) || bids.length === 0) throw new Error('empty orderbook');
+        if (!Array.isArray(asks) || asks.length === 0) throw new Error('empty orderbook');
+        const [bp, bq] = bids[0];
+        const [ap, aq] = asks[0];
         return {
           bidPrice: parseFloat(bp),
           bidQty:   parseFloat(bq),
@@ -32,9 +35,11 @@ export default async function handler(req, res) {
       const pair = `${token}-USD-PERP`;
       url = `https://api.prod.paradex.trade/v1/orderbook/${pair}?depth=1`;
       parseFn = data => {
-        const [[bp, bq] = []] = data.bids || [];
-        const [[ap, aq] = []] = data.asks || [];
-        if (bp == null || ap == null) throw new Error('empty orderbook');
+        const bids = data.bids || [];
+        const asks = data.asks || [];
+        if (!bids.length || !asks.length) throw new Error('empty orderbook');
+        const [[bp, bq]] = bids;
+        const [[ap, aq]] = asks;
         return {
           bidPrice: parseFloat(bp),
           bidQty:   parseFloat(bq),
@@ -51,8 +56,8 @@ export default async function handler(req, res) {
       parseFn = data => {
         const bids = data.data?.bid;
         const asks = data.data?.ask;
-        if (!Array.isArray(bids) || !bids.length) throw new Error('empty orderbook');
-        if (!Array.isArray(asks) || !asks.length) throw new Error('empty orderbook');
+        if (!Array.isArray(bids) || bids.length === 0) throw new Error('empty orderbook');
+        if (!Array.isArray(asks) || asks.length === 0) throw new Error('empty orderbook');
         return {
           bidPrice: parseFloat(bids[0].price),
           bidQty:   parseFloat(bids[0].qty),
@@ -68,8 +73,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { data } = await axios.get(url, { timeout: 15000 });
-    const { bidPrice, bidQty, askPrice, askQty } = parseFn(data);
+    const response = await axios.get(url, { timeout: 15000 });
+    const { bidPrice, bidQty, askPrice, askQty } = parseFn(response.data);
+
+    // Vérifie qu'on a bien des nombres valides
+    if ([bidPrice, bidQty, askPrice, askQty].some(v => typeof v !== 'number' || isNaN(v))) {
+      throw new Error('invalid orderbook');
+    }
 
     const spread    = askPrice - bidPrice;
     const liquidity = Math.min(bidPrice * bidQty, askPrice * askQty);
@@ -77,10 +87,9 @@ export default async function handler(req, res) {
     return res.status(200).json({ bidPrice, bidQty, askPrice, askQty, spread, liquidity });
   } catch (err) {
     console.error(err.response?.data || err.message);
-    // Si ordre vide, on renvoie 404 pour le front puisse l’afficher proprement
     if (err.message === 'empty orderbook') {
       return res.status(404).json({ error: 'orderbook empty for this token/exchange' });
     }
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message || 'internal error' });
   }
 }
