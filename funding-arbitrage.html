@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -13,23 +13,90 @@
   <link rel="stylesheet" href="css/fundingarbitrage.css"/>
 </head>
 <body>
-  <!-- Bouton “home” -->
+  <!-- Home button top left -->
   <a href="index.html" class="home-logo">
-    <img src="images/neymar.jpg" alt="Accueil"/>
+    <img src="images/neymar.jpg" alt="Home" />
   </a>
-  <button id="theme-toggle" class="theme-toggle">🌙</button>
+
+  <!-- Dark/light toggle top right -->
+  <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
 
   <div class="container">
     <h1>Funding Arbitrage Opportunities</h1>
-    <div class="actions" style="gap:12px;display:flex;align-items:center;flex-wrap:wrap;">
+    
+    <!-- Simple stats -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-label">Pairs</span>
+        <span class="stat-value" id="stats-pairs">-</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Max APR</span>
+        <span class="stat-value" id="stats-max-apr">-</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Opportunities</span>
+        <span class="stat-value" id="stats-opportunities">-</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Last Update</span>
+        <span class="stat-value" id="stats-last-update">-</span>
+      </div>
+    </div>
+
+    <!-- Simple actions -->
+    <div class="actions">
       <button id="sort-apr-btn" class="button">Sort by APR ↓</button>
       <button id="filter-fav-btn" class="button">Show favorites</button>
-      <span style="margin-left:16px;">Exchanges to show :</span>
-      <label class="ex-checkbox"><input type="checkbox" class="exchange-filter" value="paradex" checked> <img src="images/paradex.png" class="ex-logo" alt="Paradex"> Paradex</label>
-      <label class="ex-checkbox"><input type="checkbox" class="exchange-filter" value="vest" checked> <img src="images/vest.png" class="ex-logo" alt="Vest"> Vest</label>
-      <label class="ex-checkbox"><input type="checkbox" class="exchange-filter" value="ext" checked> <img src="images/extended.png" class="ex-logo" alt="Extended"> Extended</label>
-      <label class="ex-checkbox"><input type="checkbox" class="exchange-filter" value="hyperliquid" checked> <img src="images/hyperliquid.png" class="ex-logo" alt="Hyperliquid"> Hyperliquid</label>
+      <button id="refresh-btn" class="button">🔄 Refresh</button>
+      
+      <!-- Must Include filters -->
+      <div style="margin-left: 20px; display: flex; align-items: center; gap: 8px;">
+        <span style="color: #9ca3af; font-weight: 500;">Must include:</span>
+        <button id="filter-must-vest" class="exchange-must-btn" data-exchange="vest">
+          <img src="images/vest.png" class="ex-logo" alt="Vest"> Vest
+        </button>
+        <button id="filter-must-paradex" class="exchange-must-btn" data-exchange="paradex">
+          <img src="images/paradex.png" class="ex-logo" alt="Paradex"> Paradex
+        </button>
+        <button id="filter-must-ext" class="exchange-must-btn" data-exchange="ext">
+          <img src="images/extended.png" class="ex-logo" alt="Extended"> Extended
+        </button>
+        <button id="filter-must-hyperliquid" class="exchange-must-btn" data-exchange="hyperliquid">
+          <img src="images/hyperliquid.png" class="ex-logo" alt="Hyperliquid"> Hyperliquid
+        </button>
+        <button id="filter-must-backpack" class="exchange-must-btn" data-exchange="backpack">
+          <img src="images/backpack.png" class="ex-logo" alt="Backpack"> Backpack
+        </button>
+        <button id="filter-must-clear" class="button" style="font-size: 0.8rem; padding: 4px 8px;">
+          Clear
+        </button>
+      </div>
+      
+      <br><span>Show exchanges:</span>
+      <label class="ex-checkbox">
+        <input type="checkbox" class="exchange-filter" value="paradex" checked> 
+        <img src="images/paradex.png" class="ex-logo" alt="Paradex"> Paradex
+      </label>
+      <label class="ex-checkbox">
+        <input type="checkbox" class="exchange-filter" value="vest" checked> 
+        <img src="images/vest.png" class="ex-logo" alt="Vest"> Vest
+      </label>
+      <label class="ex-checkbox">
+        <input type="checkbox" class="exchange-filter" value="ext" checked> 
+        <img src="images/extended.png" class="ex-logo" alt="Extended"> Extended
+      </label>
+      <label class="ex-checkbox">
+        <input type="checkbox" class="exchange-filter" value="hyperliquid" checked> 
+        <img src="images/hyperliquid.png" class="ex-logo" alt="Hyperliquid"> Hyperliquid
+      </label>
+      <label class="ex-checkbox">
+        <input type="checkbox" class="exchange-filter" value="backpack" checked> 
+        <img src="images/backpack.png" class="ex-logo" alt="Backpack"> Backpack
+      </label>
     </div>
+
+    <!-- Simple table -->
     <table id="arbitrage-table">
       <thead>
         <tr>
@@ -39,15 +106,18 @@
           <th><img src="images/vest.png" class="ex-logo-th" alt="Vest"> Vest 1h</th>
           <th><img src="images/extended.png" class="ex-logo-th" alt="Extended"> Extended 1h</th>
           <th><img src="images/hyperliquid.png" class="ex-logo-th" alt="Hyperliquid"> Hyperliquid 1h</th>
+          <th><img src="images/backpack.png" class="ex-logo-th" alt="Backpack"> Backpack 1h</th>
           <th>Strategy</th>
           <th>APR</th>
-          <th></th>
+          <th>Actions</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody>
+        <!-- Data will appear here -->
+      </tbody>
     </table>
 
-    <!-- Card Modal pop-in pour partage arbitrage -->
+    <!-- Share modal -->
     <div id="card-modal" style="display:none"></div>
   </div>
 
@@ -57,12 +127,12 @@
     &nbsp;|&nbsp;
     <a href="donation.html" style="color:#b30000;text-decoration:underline;font-weight:600;">💸 Donate here</a>
   </footer>
-  
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="js/favorite.js"></script>
-  <script src="js/script-api.js"></script>
+  <script src="js/script-api-minimal.js"></script>
   <script src="js/theme-toggle.js"></script>
 </body>
 </html>
