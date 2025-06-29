@@ -210,6 +210,65 @@ h1 {
   border-bottom: none;
 }
 
+/* Enhanced Exchange Link Styling - Light Mode */
+#arbitrage-table td a {
+  font-weight: 700;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  border: 2px solid transparent;
+}
+
+/* LONG link styling - Light Mode */
+#arbitrage-table td a[style*="#34d399"] {
+  color: #059669 !important;
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+#arbitrage-table td a[style*="#34d399"]:hover {
+  color: #ffffff !important;
+  background: #059669;
+  border-color: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+/* SHORT link styling - Light Mode */
+#arbitrage-table td a[style*="#fca5a5"] {
+  color: #dc2626 !important;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+#arbitrage-table td a[style*="#fca5a5"]:hover {
+  color: #ffffff !important;
+  background: #dc2626;
+  border-color: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+/* Add pointer cursor and underline animation */
+#arbitrage-table td a::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+
+#arbitrage-table td a:hover::after {
+  transform: scaleX(1);
+}
+
 /* Favorite stars */
 .fav {
   color: #ccc;
@@ -511,6 +570,35 @@ body.dark #arbitrage-table td {
 
 body.dark #arbitrage-table tbody tr:hover {
   background: #2a2a2a;
+}
+
+/* Enhanced Exchange Link Styling - Dark Mode */
+body.dark #arbitrage-table td a[style*="#34d399"] {
+  color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+body.dark #arbitrage-table td a[style*="#34d399"]:hover {
+  color: #ffffff !important;
+  background: #10b981;
+  border-color: #10b981;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+body.dark #arbitrage-table td a[style*="#fca5a5"] {
+  color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+body.dark #arbitrage-table td a[style*="#fca5a5"]:hover {
+  color: #ffffff !important;
+  background: #ef4444;
+  border-color: #ef4444;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
 body.dark .fav {
