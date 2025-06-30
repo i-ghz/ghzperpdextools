@@ -1,19 +1,20 @@
-// api/funding.js - Version avec parallélisation pure (sans timeout)
+// api/funding.js - Version with Orderly integration
 const axios = require('axios');
 
 module.exports = async (req, res) => {
   const start = Date.now();
-  console.log('🚀 Starting parallelized API calls...');
+  console.log('🚀 Starting parallelized API calls with Orderly...');
   
   try {
     // 🚀 PARALLÉLISATION MAXIMALE - Tous les appels principaux en même temps
     console.log('📡 Fetching all main APIs in parallel...');
-    const [vestRes, markets, extRes, hyperliquidRes, backpackMarketsRes] = await Promise.all([
+    const [vestRes, markets, extRes, hyperliquidRes, backpackMarketsRes, orderlyRes] = await Promise.all([
       axios.get('https://serverprod.vest.exchange/v2/ticker/latest'),
       axios.get('https://api.prod.paradex.trade/v1/markets'),
       axios.get('https://api.extended.exchange/api/v1/info/markets'),
       axios.post('https://api.hyperliquid.xyz/info', { type: 'metaAndAssetCtxs' }),
-      axios.get('https://api.backpack.exchange/api/v1/markets')
+      axios.get('https://api.backpack.exchange/api/v1/markets'),
+      axios.get('https://api.orderly.org/v1/public/funding_rates')
     ]);
     
     console.log(`✅ All main APIs fetched in ${Date.now() - start}ms`);
@@ -39,7 +40,15 @@ module.exports = async (req, res) => {
       hyperliquid1h: Number(assetCtxs[i].funding),
     }));
 
-    console.log(`✅ Instant processing completed: V:${vest.length} E:${extended.length} H:${hyperliquid.length}`);
+    // Traitement Orderly (instantané) - Conversion 8h vers 1h
+    const orderly = orderlyRes.data.data.rows
+      .filter(row => row.symbol.startsWith('PERP_') && row.symbol.endsWith('_USDC'))
+      .map(row => ({
+        symbol: row.symbol.replace(/^PERP_/, '').replace(/_USDC$/, '').replace(/^1000000/, '').replace(/^1000/, '').toUpperCase(),
+        orderly1h: Number(row.est_funding_rate) / 8, // Conversion 8h -> 1h
+      }));
+
+    console.log(`✅ Instant processing completed: V:${vest.length} E:${extended.length} H:${hyperliquid.length} O:${orderly.length}`);
 
     // 🚀 PARALLÉLISATION DES APPELS SECONDAIRES
     const perp = markets.data.results.filter(m => m.asset_kind === 'PERP');
@@ -91,6 +100,7 @@ module.exports = async (req, res) => {
     extended.forEach(x => symbolsSet.add(x.symbol));
     hyperliquid.forEach(x => symbolsSet.add(x.symbol));
     backpack.forEach(x => symbolsSet.add(x.symbol));
+    orderly.forEach(x => symbolsSet.add(x.symbol));
 
     // Création optimisée des Maps pour lookup O(1)
     const vestMap = new Map(vest.map(x => [x.symbol, x.vest1h]));
@@ -98,6 +108,7 @@ module.exports = async (req, res) => {
     const extendedMap = new Map(extended.map(x => [x.symbol, x.ext1h]));
     const hyperliquidMap = new Map(hyperliquid.map(x => [x.symbol, x.hyperliquid1h]));
     const backpackMap = new Map(backpack.map(x => [x.symbol, x.backpack1h]));
+    const orderlyMap = new Map(orderly.map(x => [x.symbol, x.orderly1h]));
 
     // Assemblage final ultra-rapide
     const result = Array.from(symbolsSet).map(sym => ({
@@ -107,6 +118,7 @@ module.exports = async (req, res) => {
       ext1h: extendedMap.get(sym) ?? null,
       hyperliquid1h: hyperliquidMap.get(sym) ?? null,
       backpack1h: backpackMap.get(sym) ?? null,
+      orderly1h: orderlyMap.get(sym) ?? null,
     }));
 
     const totalTime = Date.now() - start;
