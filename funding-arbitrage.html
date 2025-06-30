@@ -46,6 +46,14 @@
 
     <!-- Simple actions -->
     <div class="actions">
+      <!-- Timeframe selector -->
+      <div class="timeframe-selector">
+        <span class="timeframe-label">Time:</span>
+        <button class="timeframe-btn active" data-timeframe="1h">1h</button>
+        <button class="timeframe-btn" data-timeframe="8h">8h</button>
+        <button class="timeframe-btn" data-timeframe="1y">1y</button>
+      </div>
+      
       <button id="sort-apr-btn" class="button">Sort by APR ↓</button>
       <button id="filter-fav-btn" class="button">Show favorites</button>
       <button id="refresh-btn" class="button">🔄 Refresh</button>
@@ -109,12 +117,12 @@
         <tr>
           <th>★</th>
           <th>Pair</th>
-          <th><img src="images/paradex.png" class="ex-logo-th" alt="Paradex"> Paradex 1h</th>
-          <th><img src="images/vest.png" class="ex-logo-th" alt="Vest"> Vest 1h</th>
-          <th><img src="images/extended.png" class="ex-logo-th" alt="Extended"> Extended 1h</th>
-          <th><img src="images/hyperliquid.png" class="ex-logo-th" alt="Hyperliquid"> Hyperliquid 1h</th>
-          <th><img src="images/backpack.png" class="ex-logo-th" alt="Backpack"> Backpack 1h</th>
-          <th><img src="images/orderly.png" class="ex-logo-th" alt="Orderly"> Orderly 1h</th>
+          <th><img src="images/paradex.png" class="ex-logo-th" alt="Paradex"> Paradex <span class="timeframe-header">1h</span></th>
+          <th><img src="images/vest.png" class="ex-logo-th" alt="Vest"> Vest <span class="timeframe-header">1h</span></th>
+          <th><img src="images/extended.png" class="ex-logo-th" alt="Extended"> Extended <span class="timeframe-header">1h</span></th>
+          <th><img src="images/hyperliquid.png" class="ex-logo-th" alt="Hyperliquid"> Hyperliquid <span class="timeframe-header">1h</span></th>
+          <th><img src="images/backpack.png" class="ex-logo-th" alt="Backpack"> Backpack <span class="timeframe-header">1h</span></th>
+          <th><img src="images/orderly.png" class="ex-logo-th" alt="Orderly"> Orderly <span class="timeframe-header">1h</span></th>
           <th>Strategy</th>
           <th>APR</th>
           <th>Actions</th>

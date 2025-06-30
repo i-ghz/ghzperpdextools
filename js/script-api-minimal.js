@@ -1,9 +1,10 @@
-// js/script-api-minimal.js - English version with Orderly + Backpack (frontend only)
+// js/script-api-minimal.js - English version with Orderly + Backpack + Timeframe selector
 
 const API_URL = "/api/funding";
 let dataStore = [];
 let filterFavOnly = false;
 let mustIncludeExchange = null; // Required exchange
+let currentTimeframe = '1h'; // Default timeframe
 
 const EX_LOGOS = {
   paradex: 'images/paradex.png',
@@ -35,6 +36,47 @@ const EX_LABELS = {
 // === UTILITIES ===
 function getSelectedExchanges() {
   return Array.from(document.querySelectorAll('.exchange-filter:checked')).map(cb => cb.value);
+}
+
+function getTimeframeKey(exchange, timeframe) {
+  // On utilise toujours les données 1h de l'API
+  if (exchange === 'ext') {
+    return 'ext1h';
+  }
+  return `${exchange}1h`;
+}
+
+function convertRateToTimeframe(rate1h, timeframe) {
+  if (rate1h === null || rate1h === undefined) return null;
+  
+  switch(timeframe) {
+    case '1h':
+      return rate1h * 100; // Convertir en pourcentage
+    case '8h':
+      return rate1h * 8 * 100; // 8 heures en pourcentage
+    case '1y':
+      return rate1h * 8760 * 100; // 1 an en pourcentage
+    default:
+      return rate1h * 100;
+  }
+}
+
+function calculateAPR(minRate, maxRate, timeframe) {
+  const rateDiff = maxRate - minRate;
+  
+  switch(timeframe) {
+    case '1h':
+      // Pour 1h: différence × 24 × 365 (pour annualiser)
+      return rateDiff * 24 * 365;
+    case '8h':
+      // Pour 8h: différence × 3 × 365 (3 périodes de 8h par jour)
+      return rateDiff * 3 * 365;
+    case '1y':
+      // Pour 1y: c'est déjà annuel, juste la différence
+      return rateDiff;
+    default:
+      return rateDiff * 24 * 365;
+  }
 }
 
 // === FETCH DATA ===
@@ -69,12 +111,13 @@ function updateStats() {
   
   dataStore.forEach(item => {
     const rates = selectedExchanges.map(ex => {
-      const key = ex === 'ext' ? 'ext1h' : `${ex}1h`;
-      return item[key];
+      const key = getTimeframeKey(ex, currentTimeframe);
+      const rate1h = item[key];
+      return convertRateToTimeframe(rate1h, currentTimeframe);
     }).filter(r => r !== null);
     
     if (rates.length >= 2) {
-      const apr = (Math.max(...rates) - Math.min(...rates)) * 24 * 365 * 100;
+      const apr = calculateAPR(Math.min(...rates), Math.max(...rates), currentTimeframe);
       maxApr = Math.max(maxApr, apr);
       if (apr > 10) opportunities++;
     }
@@ -128,7 +171,7 @@ function updateTableHeader(selectedExchanges) {
   
   const exchangeCols = selectedExchanges.map(ex => {
     const label = EX_LABELS[ex];
-    return `<th><img src="${EX_LOGOS[ex]}" class="ex-logo-th" alt="${label}"> ${label} 1h</th>`;
+    return `<th><img src="${EX_LOGOS[ex]}" class="ex-logo-th" alt="${label}"> ${label} <span class="timeframe-header">${currentTimeframe}</span></th>`;
   }).join('');
   
   thead.innerHTML = `
@@ -139,6 +182,11 @@ function updateTableHeader(selectedExchanges) {
     <th>APR</th>
     <th>Actions</th>
   `;
+  
+  // Also update the fixed headers in the HTML
+  document.querySelectorAll('.timeframe-header').forEach(el => {
+    el.textContent = currentTimeframe;
+  });
 }
 
 // === DATA PROCESSING ===
@@ -150,16 +198,19 @@ function processData(selectedExchanges) {
       
       // Check we have at least 2 exchanges with data
       const rates = selectedExchanges.map(ex => {
-        const key = ex === 'ext' ? 'ext1h' : `${ex}1h`;
-        return { dex: ex, rate: item[key] };
+        const key = getTimeframeKey(ex, currentTimeframe);
+        const rate1h = item[key];
+        const convertedRate = convertRateToTimeframe(rate1h, currentTimeframe);
+        return { dex: ex, rate: convertedRate };
       }).filter(r => r.rate !== null && r.rate !== undefined);
       
       if (rates.length < 2) return false;
       
       // Must include exchange verification
       if (mustIncludeExchange) {
-        const mustIncludeKey = mustIncludeExchange === 'ext' ? 'ext1h' : `${mustIncludeExchange}1h`;
-        const mustIncludeRate = item[mustIncludeKey];
+        const mustIncludeKey = getTimeframeKey(mustIncludeExchange, currentTimeframe);
+        const mustIncludeRate1h = item[mustIncludeKey];
+        const mustIncludeRate = convertRateToTimeframe(mustIncludeRate1h, currentTimeframe);
         
         // If required exchange has no data, exclude this pair
         if (mustIncludeRate === null || mustIncludeRate === undefined) {
@@ -185,14 +236,16 @@ function processData(selectedExchanges) {
     })
     .map(item => {
       const rates = selectedExchanges.map(ex => {
-        const key = ex === 'ext' ? 'ext1h' : `${ex}1h`;
+        const key = getTimeframeKey(ex, currentTimeframe);
+        const rate1h = item[key];
+        const convertedRate = convertRateToTimeframe(rate1h, currentTimeframe);
         const label = EX_LABELS[ex];
-        return { dex: ex, label, rate: item[key] };
+        return { dex: ex, label, rate: convertedRate };
       }).filter(r => r.rate !== null && r.rate !== undefined);
       
       const min = rates.reduce((a, b) => a.rate < b.rate ? a : b);
       const max = rates.reduce((a, b) => a.rate > b.rate ? a : b);
-      const apr = (max.rate - min.rate) * 24 * 365 * 100;
+      const apr = calculateAPR(min.rate, max.rate, currentTimeframe);
       
       return { symbol: item.symbol, rates, min, max, apr };
     })
@@ -225,7 +278,7 @@ function createRow(op, selectedExchanges) {
     }
     
     return `<td style="${style}">
-      <img src="${EX_LOGOS[rate.dex]}" class="ex-logo-td">${rate.rate.toFixed(6)}
+      <img src="${EX_LOGOS[rate.dex]}" class="ex-logo-td">${rate.rate.toFixed(2)}%
       ${isMin ? '<br><small style="color:#34d399;font-weight:600;">LONG</small>' : ''}
       ${isMax ? '<br><small style="color:#fca5a5;font-weight:600;">SHORT</small>' : ''}
     </td>`;
@@ -265,12 +318,13 @@ function sortData() {
     
     function getApr(item) {
       const rates = selectedExchanges.map(ex => {
-        const key = ex === 'ext' ? 'ext1h' : `${ex}1h`;
-        return item[key];
+        const key = getTimeframeKey(ex, currentTimeframe);
+        const rate1h = item[key];
+        return convertRateToTimeframe(rate1h, currentTimeframe);
       }).filter(r => r !== null);
       
       if (rates.length < 2) return 0;
-      return (Math.max(...rates) - Math.min(...rates)) * 24 * 365 * 100;
+      return calculateAPR(Math.min(...rates), Math.max(...rates), currentTimeframe);
     }
     
     return getApr(b) - getApr(a);
@@ -287,9 +341,24 @@ function toggleFavorites() {
   renderTable();
 }
 
+// === TIMEFRAME MANAGEMENT ===
+function setTimeframe(timeframe) {
+  currentTimeframe = timeframe;
+  
+  // Update active button
+  document.querySelectorAll('.timeframe-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelector(`[data-timeframe="${timeframe}"]`).classList.add('active');
+  
+  console.log(`🕒 Switched to ${timeframe} timeframe`);
+  renderTable();
+  updateStats();
+}
+
 // === EVENTS ===
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('🚀 English script with Orderly + Backpack loaded');
+  console.log('🚀 English script with Orderly + Backpack + Timeframe selector loaded');
   
   // Buttons with checks
   const sortBtn = document.getElementById('sort-apr-btn');
@@ -301,6 +370,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (refreshBtn) refreshBtn.addEventListener('click', () => {
     console.log('🔄 Manual refresh...');
     fetchFundingData();
+  });
+  
+  // Timeframe buttons
+  document.querySelectorAll('.timeframe-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const timeframe = btn.dataset.timeframe;
+      setTimeframe(timeframe);
+    });
   });
   
   // Must Include buttons
@@ -471,4 +548,4 @@ function shareArbitrageCard() {
   }
 }
 
-console.log('✅ English script with Orderly + Backpack loaded');
+console.log('✅ English script with Orderly + Backpack + Timeframe selector loaded');
