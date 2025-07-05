@@ -879,3 +879,15 @@ footer a:hover {
 body.dark footer {
   color: #9ca3af;
 }
+.pair-name:hover {
+  color: #22d3ee !important;
+  text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+  transform: scale(1.05);
+  animation: glow-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0% { text-shadow: 0 0 8px rgba(34, 211, 238, 0.5); }
+  50% { text-shadow: 0 0 12px rgba(34, 211, 238, 0.8); }
+  100% { text-shadow: 0 0 8px rgba(34, 211, 238, 0.5); }
+}

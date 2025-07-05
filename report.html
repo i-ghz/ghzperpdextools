@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Vercel Insights -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="images/favicon-16.png" sizes="16x16" type="image/png">
+    <title>Funding Report</title>
+    <link rel="stylesheet" href="css/report.css">
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Bouton Dark Mode -->
+  <button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">🌙</button>
+    <div class="container">
+        <header class="report-header">
+            <h1 id="report-title">Funding Report</h1>
+            <button onclick="window.history.back()" class="back-btn">← Back to Main</button>
+        </header>
+
+        <div class="strategy-section">
+            <h2>Current Strategy</h2>
+            <div id="strategy-display" class="strategy-display">
+                <!-- Strategy info will be populated here -->
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="token-controls">
+                <label for="token">Token:</label>
+                <select id="token"></select>
+            </div>
+            
+            <div class="exchange-controls">
+                <div class="exchange-group">
+                    <label for="sourceA">Long Position:</label>
+                    <select id="sourceA">
+                        <option value="vest">Vest</option>
+                        <option value="paradex">Paradex</option>
+                        <option value="ext">Extended</option>
+                        <option value="hyperliquid">Hyperliquid</option>
+                        <option value="backpack">Backpack</option>
+                        <option value="orderly">Orderly</option>
+                    </select>
+                </div>
+                
+                <div class="exchange-group">
+                    <label for="sourceB">Short Position:</label>
+                    <select id="sourceB">
+                        <option value="vest">Vest</option>
+                        <option value="paradex">Paradex</option>
+                        <option value="ext">Extended</option>
+                        <option value="hyperliquid">Hyperliquid</option>
+                        <option value="backpack">Backpack</option>
+                        <option value="orderly">Orderly</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="ma-controls">
+                <label for="ma-window">Moving Average (days):</label>
+                <input type="number" id="ma-window" value="7" min="1" max="30">
+            </div>
+
+            <button id="showChart" class="update-btn">Update Chart</button>
+        </div>
+
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3>Funding Rate History & Delta-Neutral APR</h3>
+                <div id="fundingChart"></div>
+            </div>
+        </div>
+
+        <div class="orderbook-section">
+            <h3>Real-time Orderbook Analysis</h3>
+            <div class="orderbook-grid">
+                <div class="orderbook-card" id="orderbook-long">
+                    <h4 id="long-exchange-title">Long Exchange</h4>
+                    <div id="long-orderbook-data">
+                        <p class="loading">Loading...</p>
+                    </div>
+                </div>
+                
+                <div class="orderbook-card" id="orderbook-short">
+                    <h4 id="short-exchange-title">Short Exchange</h4>
+                    <div id="short-orderbook-data">
+                        <p class="loading">Loading...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="orderbook-summary">
+                <div id="spread-analysis"></div>
+                <div id="liquidity-analysis"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/report.js"></script>
+    <script src="js/theme-toggle.js"></script>
+</body>
+</html>
