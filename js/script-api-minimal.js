@@ -379,7 +379,7 @@ class TableRenderer {
         <td style="font-weight:600;color:#ff5c5c;cursor:pointer;text-decoration:underline;transition: all 0.2s ease;" 
             class="pair-name" 
             data-symbol="${symbol}" 
-            title="Cliquez pour voir le rapport détaillé">${symbol}</td>
+            title="Click here to see the full report">${symbol}</td>
         ${rateCols}
         <td style="font-size:0.9rem;color:#e5e7eb;">${strategy}</td>
         <td style="font-weight:700;color:#34d399;">${apr.toFixed(2)}%</td>
