@@ -1,20 +1,21 @@
-// api/funding.js - Version with Orderly integration
+// api/funding.js - Version avec Hibachi + Orderly integration
 const axios = require('axios');
 
 module.exports = async (req, res) => {
   const start = Date.now();
-  console.log('🚀 Starting parallelized API calls with Orderly...');
+  console.log('🚀 Starting parallelized API calls with Hibachi + Orderly...');
   
   try {
     // 🚀 PARALLÉLISATION MAXIMALE - Tous les appels principaux en même temps
     console.log('📡 Fetching all main APIs in parallel...');
-    const [vestRes, markets, extRes, hyperliquidRes, backpackMarketsRes, orderlyRes] = await Promise.all([
+    const [vestRes, markets, extRes, hyperliquidRes, backpackMarketsRes, orderlyRes, hibachiMarketsRes] = await Promise.all([
       axios.get('https://serverprod.vest.exchange/v2/ticker/latest'),
       axios.get('https://api.prod.paradex.trade/v1/markets'),
       axios.get('https://api.extended.exchange/api/v1/info/markets'),
       axios.post('https://api.hyperliquid.xyz/info', { type: 'metaAndAssetCtxs' }),
       axios.get('https://api.backpack.exchange/api/v1/markets'),
-      axios.get('https://api.orderly.org/v1/public/funding_rates')
+      axios.get('https://api.orderly.org/v1/public/funding_rates'),
+      axios.get('https://data-api.hibachi.xyz/market/exchange-info')
     ]);
     
     console.log(`✅ All main APIs fetched in ${Date.now() - start}ms`);
@@ -50,14 +51,15 @@ module.exports = async (req, res) => {
 
     console.log(`✅ Instant processing completed: V:${vest.length} E:${extended.length} H:${hyperliquid.length} O:${orderly.length}`);
 
-    // 🚀 PARALLÉLISATION DES APPELS SECONDAIRES
+    // 🚀 PARALLÉLISATION DES APPELS SECONDAIRES (Paradex + Backpack + Hibachi)
     const perp = markets.data.results.filter(m => m.asset_kind === 'PERP');
     const backpackPerps = backpackMarketsRes.data.filter(m => m.marketType === 'PERP');
+    const hibachiPerps = hibachiMarketsRes.data.futureContracts.filter(c => c.status === 'LIVE');
     
-    console.log(`📡 Starting parallel secondary calls: ${perp.length} Paradex + ${backpackPerps.length} Backpack...`);
+    console.log(`📡 Starting parallel secondary calls: ${perp.length} Paradex + ${backpackPerps.length} Backpack + ${hibachiPerps.length} Hibachi...`);
 
-    // 🚀 PARADEX + BACKPACK EN PARALLÈLE TOTAL
-    const [paradexRaw, backpack] = await Promise.all([
+    // 🚀 PARADEX + BACKPACK + HIBACHI EN PARALLÈLE TOTAL
+    const [paradexRaw, backpack, hibachi] = await Promise.all([
       // Paradex en parallèle total
       Promise.all(perp.map(async m => {
         const r = await axios.get(
@@ -88,10 +90,31 @@ module.exports = async (req, res) => {
             backpack1h: null,
           };
         }
+      })),
+
+      // Hibachi en parallèle total
+      Promise.all(hibachiPerps.map(async contract => {
+        try {
+          const priceRes = await axios.get(
+            `https://data-api.hibachi.xyz/market/data/prices?symbol=${contract.symbol}`
+          );
+          const priceData = priceRes.data;
+          
+          return {
+            symbol: contract.underlyingSymbol.toUpperCase(),
+            hibachi1h: priceData.fundingRateEstimation ? Number(priceData.fundingRateEstimation.estimatedFundingRate) / 8 : null,
+          };
+        } catch (error) {
+          console.warn(`⚠️ Hibachi error for ${contract.symbol}:`, error.message);
+          return {
+            symbol: contract.underlyingSymbol.toUpperCase(),
+            hibachi1h: null,
+          };
+        }
       }))
     ]);
 
-    console.log(`✅ All secondary calls completed: P:${paradexRaw.length} B:${backpack.length}`);
+    console.log(`✅ All secondary calls completed: P:${paradexRaw.length} B:${backpack.length} H:${hibachi.length}`);
 
     // Merge rapide avec Set pour optimiser les performances
     const symbolsSet = new Set();
@@ -101,6 +124,7 @@ module.exports = async (req, res) => {
     hyperliquid.forEach(x => symbolsSet.add(x.symbol));
     backpack.forEach(x => symbolsSet.add(x.symbol));
     orderly.forEach(x => symbolsSet.add(x.symbol));
+    hibachi.forEach(x => symbolsSet.add(x.symbol));
 
     // Création optimisée des Maps pour lookup O(1)
     const vestMap = new Map(vest.map(x => [x.symbol, x.vest1h]));
@@ -109,6 +133,7 @@ module.exports = async (req, res) => {
     const hyperliquidMap = new Map(hyperliquid.map(x => [x.symbol, x.hyperliquid1h]));
     const backpackMap = new Map(backpack.map(x => [x.symbol, x.backpack1h]));
     const orderlyMap = new Map(orderly.map(x => [x.symbol, x.orderly1h]));
+    const hibachiMap = new Map(hibachi.map(x => [x.symbol, x.hibachi1h]));
 
     // Assemblage final ultra-rapide
     const result = Array.from(symbolsSet).map(sym => ({
@@ -119,11 +144,12 @@ module.exports = async (req, res) => {
       hyperliquid1h: hyperliquidMap.get(sym) ?? null,
       backpack1h: backpackMap.get(sym) ?? null,
       orderly1h: orderlyMap.get(sym) ?? null,
+      hibachi1h: hibachiMap.get(sym) ?? null,
     }));
 
     const totalTime = Date.now() - start;
-    console.log(`🎉 ULTRA-FAST API completed in ${totalTime}ms with ${result.length} pairs`);
-    console.log(`🚀 Speed boost: ${Math.round((15000 - totalTime) / 150)}% faster than sequential`);
+    console.log(`🎉 ULTRA-FAST API with Hibachi completed in ${totalTime}ms with ${result.length} pairs`);
+    console.log(`🚀 Speed boost: ${Math.round((18000 - totalTime) / 180)}% faster than sequential`);
 
     res.status(200).json(result);
 

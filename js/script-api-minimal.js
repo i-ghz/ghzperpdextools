@@ -1,4 +1,4 @@
-// js/script-api-minimal.js - Version optimisée avec navigation vers rapport + effet de survol
+// js/script-api-minimal.js - Version optimisée avec Hibachi + navigation vers rapport + effet de survol
 
 // === CONFIGURATION ===
 const CONFIG = {
@@ -39,6 +39,11 @@ const EXCHANGE_CONFIG = {
     name: "Orderly",
     logo: 'images/orderly.png',
     refLink: 'https://pro.woofi.com/en/trade?ref=GHZ30'
+  },
+  hibachi: {
+    name: "Hibachi",
+    logo: 'images/hibachi.png',
+    refLink: 'https://hibachi.xyz/r/ghz'
   }
 };
 
@@ -335,7 +340,7 @@ class TableRenderer {
     
     tbody.innerHTML = opportunities.map(op => this.createRow(op, selectedExchanges)).join('');
     this.attachEventListeners(tbody, opportunities);
-    this.addHoverStyles(); // NOUVEAU: Ajouter les styles de survol
+    this.addHoverStyles();
   }
 
   updateTableHeader(selectedExchanges) {
@@ -439,15 +444,13 @@ class TableRenderer {
 
   getEmptyMessage() {
     return `
-      <tr><td colspan="11" style="text-align:center;padding:40px;">
+      <tr><td colspan="12" style="text-align:center;padding:40px;">
         ${this.appState.filterFavOnly ? 'No favorites found' : 'No opportunities found'}
       </td></tr>
     `;
   }
 
-  // NOUVEAU: Ajouter les styles de survol dynamiquement
   addHoverStyles() {
-    // Vérifier si les styles existent déjà
     if (document.getElementById('pair-hover-styles')) {
       return;
     }
@@ -466,7 +469,6 @@ class TableRenderer {
         transform: scale(0.98);
       }
       
-      /* Animation pour l'effet de glow */
       @keyframes glow-pulse {
         0% { text-shadow: 0 0 8px rgba(34, 211, 238, 0.5); }
         50% { text-shadow: 0 0 12px rgba(34, 211, 238, 0.8); }
@@ -481,7 +483,6 @@ class TableRenderer {
     document.head.appendChild(style);
   }
 
-  // Event listeners avec navigation
   attachEventListeners(tbody, opportunities) {
     tbody.addEventListener('click', (e) => {
       if (e.target.classList.contains('fav')) {
@@ -489,7 +490,6 @@ class TableRenderer {
         this.render();
       }
       
-      // Navigation vers la page de rapport
       if (e.target.classList.contains('pair-name')) {
         const symbol = e.target.dataset.symbol;
         this.navigateToReport(symbol, opportunities);
@@ -497,11 +497,9 @@ class TableRenderer {
     });
   }
 
-  // Navigation vers le rapport
   navigateToReport(symbol, opportunities) {
     console.log(`🔍 Navigating to report for ${symbol}`);
     
-    // Trouver l'opportunité correspondante
     const opportunity = opportunities.find(op => op.symbol === symbol);
     if (!opportunity) {
       console.error(`❌ No opportunity found for ${symbol}`);
@@ -509,7 +507,6 @@ class TableRenderer {
       return;
     }
 
-    // Construire les paramètres URL
     const params = new URLSearchParams({
       symbol: symbol,
       longExchange: opportunity.min.dex,
@@ -521,8 +518,6 @@ class TableRenderer {
     });
 
     console.log(`✅ Redirecting to: /report?${params.toString()}`);
-    
-    // Navigation vers la page de rapport
     window.location.href = `/report?${params.toString()}`;
   }
 }
@@ -565,7 +560,7 @@ class ErrorHandler {
       const tbody = tableElement.querySelector('tbody');
       if (tbody) {
         tbody.innerHTML = `
-          <tr><td colspan="11" style="text-align:center;padding:40px;color:red;">
+          <tr><td colspan="12" style="text-align:center;padding:40px;color:red;">
             Error: ${error.message}
             <br><button onclick="window.app.dataService.fetchFundingData().catch(err => console.error(err))">Retry</button>
           </td></tr>
@@ -577,9 +572,7 @@ class ErrorHandler {
   static handleGenericError(error, context = '') {
     console.error(`❌ Error ${context}:`, error);
     
-    // Optionally show user-friendly error message
     if (error.message && !error.message.includes('Network')) {
-      // Only show non-network errors to user
       const errorDiv = document.createElement('div');
       errorDiv.className = 'error-toast';
       errorDiv.textContent = `Error: ${error.message}`;
@@ -621,12 +614,10 @@ class FundingArbitrageApp {
   }
 
   setupEventListeners() {
-    // State change listener
     document.addEventListener('app-state-changed', () => {
       this.render();
     });
 
-    // Button event listeners
     this.setupButtonListeners();
     this.setupExchangeFilters();
     this.setupShareModal();
@@ -674,13 +665,12 @@ class FundingArbitrageApp {
         const timeframe = btn.dataset.timeframe;
         this.appState.setTimeframe(timeframe);
         
-        // Update active button
         document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
       });
     });
 
-    // Must include exchange buttons
+    // Must include exchange buttons (including Hibachi)
     document.querySelectorAll('.exchange-must-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const exchange = btn.dataset.exchange;
@@ -704,7 +694,6 @@ class FundingArbitrageApp {
   }
 
   setupShareModal() {
-    // Modal functionality
     document.addEventListener('click', (e) => {
       if (e.target.closest('.share-btn')) {
         const btn = e.target.closest('.share-btn');
@@ -751,7 +740,6 @@ class FundingArbitrageApp {
     }
   }
 
-  // Modal methods
   createShareModal(data) {
     const tokenIcon = `images/${data.pair.toLowerCase()}.png`;
     const dateStr = new Date().toLocaleString('en-US', {
@@ -843,7 +831,6 @@ class FundingArbitrageApp {
     }
   }
 
-  // Cleanup method
   destroy() {
     this.dataService.stopAutoRefresh();
     document.removeEventListener('app-state-changed', this.render);
@@ -854,27 +841,23 @@ class FundingArbitrageApp {
 let app;
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('🚀 Optimized Funding Arbitrage App loading...');
+  console.log('🚀 Optimized Funding Arbitrage App with Hibachi loading...');
   
   try {
-    // Initialize application
     app = new FundingArbitrageApp();
-    
-    // Make app globally available for debugging
     window.app = app;
     
-    console.log('✅ Application initialized successfully');
+    console.log('✅ Application with Hibachi initialized successfully');
     
   } catch (error) {
     ErrorHandler.handleGenericError(error, 'initialization');
   }
 });
 
-// Handle page unload
 window.addEventListener('beforeunload', () => {
   if (app) {
     app.destroy();
   }
 });
 
-console.log('✅ Optimized script loaded with navigation functionality and hover effects');
+console.log('✅ Optimized script loaded with Hibachi integration, navigation functionality and hover effects');
