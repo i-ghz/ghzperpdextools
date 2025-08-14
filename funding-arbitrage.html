@@ -1,162 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-  </script>
-  <script defer src="/_vercel/insights/script.js"></script>
-  <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="icon" href="images/favicon-16.png" sizes="16x16" type="image/png">
-  <meta charset="UTF-8"/>
+  <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Funding Arbitrage Opportunities</title>
-  <link rel="stylesheet" href="css/fundingarbitrage.css"/>
+  <title>Funding Arbitrage — GHZ</title>
+  <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
-  <!-- Home button top left -->
-  <a href="index.html" class="home-logo">
-    <img src="images/neymar.jpg" alt="Home" />
-  </a>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/">
+        <img src="images/favicon-32.png" alt="">
+        <span>Funding Arbitrage</span>
+      </a>
 
-  <!-- Dark/light toggle top right -->
-  <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
+      <div id="stats-pill" class="pill">— pairs • max APR — • updated —</div>
 
-  <div class="container">
-    <h1>Funding Arbitrage Opportunities</h1>
-    
-    <!-- Simple stats -->
-    <div class="stats-bar">
-      <div class="stat-item">
-        <span class="stat-label">Pairs</span>
-        <span class="stat-value" id="stats-pairs">-</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Max APR</span>
-        <span class="stat-value" id="stats-max-apr">-</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Opportunities</span>
-        <span class="stat-value" id="stats-opportunities">-</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Last Update</span>
-        <span class="stat-value" id="stats-last-update">-</span>
-      </div>
+      <div class="spacer"></div>
+
+      <!-- Actions -->
+      <nav class="top-actions">
+        <a href="charts.html" class="btn btn-ghost">Funding charts</a>
+        <a href="link.html" class="btn btn-ghost">Opportunities</a>
+        <a href="https://twitter.com/ilyessghz2" target="_blank" rel="noopener" class="btn-twitter">
+          <span class="x">𝕏</span><span class="label">Follow @ilyessghz2</span>
+        </a>
+        <button id="refresh" class="btn">↻ Refresh</button>
+      </nav>
     </div>
+  </header>
 
-    <!-- Simple actions -->
-    <div class="actions">
-      <!-- Timeframe selector -->
-      <div class="timeframe-selector">
-        <span class="timeframe-label">Time:</span>
-        <button class="timeframe-btn active" data-timeframe="1h">1h</button>
-        <button class="timeframe-btn" data-timeframe="8h">8h</button>
-        <button class="timeframe-btn" data-timeframe="1y">1y</button>
-      </div>
-      
-      <button id="sort-apr-btn" class="button">Sort by APR ↓</button>
-      <button id="filter-fav-btn" class="button">Show favorites</button>
-      <button id="refresh-btn" class="button">🔄 Refresh</button>
-      
-      <!-- Must Include filters -->
-      <div style="margin-left: 20px; display: flex; align-items: center; gap: 8px;">
-        <span style="color: #9ca3af; font-weight: 500;">Must include:</span>
-        <button id="filter-must-vest" class="exchange-must-btn" data-exchange="vest">
-          <img src="images/vest.png" class="ex-logo" alt="Vest"> Vest
-        </button>
-        <button id="filter-must-paradex" class="exchange-must-btn" data-exchange="paradex">
-          <img src="images/paradex.png" class="ex-logo" alt="Paradex"> Paradex
-        </button>
-        <button id="filter-must-ext" class="exchange-must-btn" data-exchange="ext">
-          <img src="images/extended.png" class="ex-logo" alt="Extended"> Extended
-        </button>
-        <button id="filter-must-hyperliquid" class="exchange-must-btn" data-exchange="hyperliquid">
-          <img src="images/hyperliquid.png" class="ex-logo" alt="Hyperliquid"> Hyperliquid
-        </button>
-        <button id="filter-must-backpack" class="exchange-must-btn" data-exchange="backpack">
-          <img src="images/backpack.png" class="ex-logo" alt="Backpack"> Backpack
-        </button>
-        <button id="filter-must-orderly" class="exchange-must-btn" data-exchange="orderly">
-          <img src="images/orderly.png" class="ex-logo" alt="Orderly"> Orderly
-        </button>
-        <button id="filter-must-hibachi" class="exchange-must-btn" data-exchange="hibachi">
-          <img src="images/hibachi.png" class="ex-logo" alt="Hibachi"> Hibachi
-        </button>
-        <button id="filter-must-clear" class="button" style="font-size: 0.8rem; padding: 4px 8px;">
-          Clear
-        </button>
-      </div>
-      
-      <br><span>Show exchanges:</span>
-      <label class="ex-checkbox">
-        <input type="checkbox" class="exchange-filter" value="paradex" checked> 
-        <img src="images/paradex.png" class="ex-logo" alt="Paradex"> Paradex
-      </label>
-      <label class="ex-checkbox">
-        <input type="checkbox" class="exchange-filter" value="vest" checked> 
-        <img src="images/vest.png" class="ex-logo" alt="Vest"> Vest
-      </label>
-      <label class="ex-checkbox">
-        <input type="checkbox" class="exchange-filter" value="ext" checked> 
-        <img src="images/extended.png" class="ex-logo" alt="Extended"> Extended
-      </label>
-      <label class="ex-checkbox">
-        <input type="checkbox" class="exchange-filter" value="hyperliquid" checked> 
-        <img src="images/hyperliquid.png" class="ex-logo" alt="Hyperliquid"> Hyperliquid
-      </label>
-      <label class="ex-checkbox">
-        <input type="checkbox" class="exchange-filter" value="backpack" checked> 
-        <img src="images/backpack.png" class="ex-logo" alt="Backpack"> Backpack
-      </label>
-      <label class="ex-checkbox">
-        <input type="checkbox" class="exchange-filter" value="orderly" checked> 
-        <img src="images/orderly.png" class="ex-logo" alt="Orderly"> Orderly
-      </label>
-      <label class="ex-checkbox">
-        <input type="checkbox" class="exchange-filter" value="hibachi" checked> 
-        <img src="images/hibachi.png" class="ex-logo" alt="Hibachi"> Hibachi
-      </label>
-    </div>
+  <main class="wrap">
+    <!-- Top opportunities -->
+    <section id="cards" class="cards"></section>
 
-    <!-- Simple table -->
-    <table id="arbitrage-table">
-      <thead>
-        <tr>
-          <th>★</th>
-          <th>Pair</th>
-          <th><img src="images/paradex.png" class="ex-logo-th" alt="Paradex"> Paradex <span class="timeframe-header">1h</span></th>
-          <th><img src="images/vest.png" class="ex-logo-th" alt="Vest"> Vest <span class="timeframe-header">1h</span></th>
-          <th><img src="images/extended.png" class="ex-logo-th" alt="Extended"> Extended <span class="timeframe-header">1h</span></th>
-          <th><img src="images/hyperliquid.png" class="ex-logo-th" alt="Hyperliquid"> Hyperliquid <span class="timeframe-header">1h</span></th>
-          <th><img src="images/backpack.png" class="ex-logo-th" alt="Backpack"> Backpack <span class="timeframe-header">1h</span></th>
-          <th><img src="images/orderly.png" class="ex-logo-th" alt="Orderly"> Orderly <span class="timeframe-header">1h</span></th>
-          <th><img src="images/hibachi.png" class="ex-logo-th" alt="Hibachi"> Hibachi <span class="timeframe-header">1h</span></th>
-          <th>Strategy</th>
-          <th>APR</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Data will appear here -->
-      </tbody>
-    </table>
+    <!-- Controls -->
+    <section class="controls">
+      <div class="chip active" data-tf="1h">1h</div>
+      <div class="chip" data-tf="8h">8h</div>
+      <div class="chip" data-tf="1y">1y</div>
+      <div class="sep"></div>
 
-    <!-- Share modal -->
-    <div id="card-modal" style="display:none"></div>
-  </div>
+      <!-- exchanges -->
+      <div class="chip ex active" data-ex="paradex">Paradex</div>
+      <div class="chip ex active" data-ex="vest">Vest</div>
+      <div class="chip ex active" data-ex="ext">Extended</div>
+      <div class="chip ex active" data-ex="hyperliquid">Hyperliquid</div>
+      <div class="chip ex" data-ex="backpack">Backpack</div>
+      <div class="chip ex" data-ex="orderly">Orderly</div>
+      <div class="chip ex" data-ex="hibachi">Hibachi</div>
+    </section>
 
-  <footer style="text-align:center;margin-top:40px;margin-bottom:12px;color:#888;">
-    created by 
-    <a href="https://twitter.com/ilyessghz2" target="_blank" style="color:#22c55e;text-decoration:underline;">@ilyessghz2</a>
-    &nbsp;|&nbsp;
-    <a href="donation.html" style="color:#b30000;text-decoration:underline;font-weight:600;">💸 Donate here</a>
+    <!-- Table -->
+    <section>
+      <table class="table">
+        <thead>
+          <tr id="thead-row">
+            <th style="width:36px">★</th>
+            <th>Pair</th>
+            <!-- dynamic exchange columns -->
+            <th>Strategy</th>
+            <th style="text-align:right">APR</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="99" class="empty">Loading…</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="foot">
+    by <a href="https://twitter.com/ilyessghz2" target="_blank">@ilyessghz2</a> •
+    <a href="donation.html">Donate</a>
   </footer>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="js/favorite.js"></script>
-  <script src="js/script-api-minimal.js"></script>
-  <script src="js/theme-toggle.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

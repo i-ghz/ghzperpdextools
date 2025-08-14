@@ -1,58 +1,83 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GHZ PerpDEX Toolbox</title>
-  <!-- Vercel Insights -->
-  <script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-  </script>
-  <script defer src="/_vercel/insights/script.js"></script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Funding Arbitrage — GHZ</title>
   <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="icon" href="images/favicon-16.png" sizes="16x16" type="image/png">
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
-  <!-- Bouton Dark Mode -->
-  <button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">🌙</button>
-
-  <!-- Bouton retour accueil -->
-  <a href="index.html" class="home-logo">
-    <img src="images/neymar.jpg" alt="Accueil">
-  </a>
-
-  <div class="container">
-    <h1>GHZ PerpDEX Toolbox</h1>
-
-    <!-- Section Hero Image -->
-    <div class="hero-image-container">
-      <a href="https://x.com/ilyessghz2" target="_blank" rel="noopener noreferrer">
-        <img src="images/ballon.jpg" alt="Ballon" class="hero-image">
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/">
+        <img src="images/favicon-32.png" alt="">
+        <span>Funding Arbitrage</span>
       </a>
-    </div>
 
-    <!-- Boutons principaux -->
-    <div class="buttons">
-      <a href="funding-arbitrage.html" class="button">Funding Farming</a>
-      <a href="report.html" class="button">Charts + Risk Report</a>
-      <a href="airdrop-calculator.html" class="button">Airdrop Calculator</a>
-      <a href="chatbot.html" class="button">Perpdex Chatbot</a>
-      <a href="link.html" class="button">Referral Links</a>
-    </div>
-  </div>
+      <div id="stats-pill" class="pill">— pairs • max APR — • updated —</div>
 
-  <!-- Scripts -->
-  <script src="js/script-airdrop.js"></script>
-  <script src="js/script-api.js"></script>
-  <script src="js/theme-toggle.js"></script>
+      <div class="spacer"></div>
+
+      <!-- Actions -->
+      <nav class="top-actions">
+        <a href="report.html" class="btn btn-ghost">Funding charts</a>
+        <a href="link.html" class="btn btn-ghost">Opportunities</a>
+        <a href="https://twitter.com/ilyessghz2" target="_blank" rel="noopener" class="btn-twitter">
+          <span class="x">𝕏</span><span class="label">Follow @ilyessghz2</span>
+        </a>
+        <button id="refresh" class="btn">↻ Refresh</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Top opportunities -->
+    <section id="cards" class="cards"></section>
+
+    <!-- Controls -->
+    <section class="controls">
+      <div class="chip active" data-tf="1h">1h</div>
+      <div class="chip" data-tf="8h">8h</div>
+      <div class="chip" data-tf="1y">1y</div>
+      <div class="sep"></div>
+
+      <!-- exchanges -->
+      <div class="chip ex active" data-ex="paradex">Paradex</div>
+      <div class="chip ex active" data-ex="vest">Vest</div>
+      <div class="chip ex active" data-ex="ext">Extended</div>
+      <div class="chip ex active" data-ex="hyperliquid">Hyperliquid</div>
+      <div class="chip ex" data-ex="backpack">Backpack</div>
+      <div class="chip ex" data-ex="orderly">Orderly</div>
+      <div class="chip ex" data-ex="hibachi">Hibachi</div>
+    </section>
+
+    <!-- Table -->
+    <section>
+      <table class="table">
+        <thead>
+          <tr id="thead-row">
+            <th style="width:36px">★</th>
+            <th>Pair</th>
+            <!-- dynamic exchange columns -->
+            <th>Strategy</th>
+            <th style="text-align:right">APR</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="99" class="empty">Loading…</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="foot">
+    by <a href="https://twitter.com/ilyessghz2" target="_blank">@ilyessghz2</a> •
+    <a href="donation.html">Donate</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/app.js"></script>
 </body>
-
-<footer style="text-align:center;margin-top:40px;margin-bottom:12px;color:#888;">
-  created by 
-  <a href="https://twitter.com/ilyessghz2" target="_blank" style="color:#dc2626;text-decoration:underline;">@ilyessghz2</a>
-  &nbsp;|&nbsp;
-  <a href="donation.html" style="color:#22c55e;text-decoration:underline;font-weight:600;">💸 Donate here</a>
-</footer>
 </html>
