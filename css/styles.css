@@ -92,6 +92,10 @@ thead th{
   font-size:12px;letter-spacing:.35px
 }
 
+/* spacer réel (injecté par JS) pour éviter que la 1ère ligne passe sous le thead sticky */
+tr.thead-spacer { visibility: hidden; }
+tr.thead-spacer td { padding:0; height:var(--thead-h); border:0; }
+
 tbody td{padding:12px;border-bottom:1px solid #1f2435}
 tbody tr:nth-child(odd){background:var(--stripe)}
 tbody tr:hover{background:#151b28}

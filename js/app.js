@@ -14,23 +14,23 @@ const TF = { "1h": { mul: 1, annual: 24 * 365 }, "8h": { mul: 8, annual: 3 * 365
 // ===== State =====
 const state = {
   data: [],
-  tf: "1h",
+  tf: "1y",
   exSel: new Set(["paradex", "vest", "ext", "hyperliquid"]),
   fav: new Set(JSON.parse(localStorage.getItem("favPairs") || "[]")),
   sort: { key: "apr", dir: "desc" }, // 'apr' | 'pair' | 'ex:<dex>'
 };
 
-const qs = (s, p = document) => p.querySelector(s);
+const qs  = (s, p = document) => p.querySelector(s);
 const qsa = (s, p = document) => [...p.querySelectorAll(s)];
 
 // ===== Helpers =====
-const keyFor = (ex) => (ex === "ext" ? "ext1h" : `${ex}1h`);
-const conv = (r1h, tf) => (r1h == null ? null : r1h * TF[tf].mul * 100);
+const keyFor  = (ex) => (ex === "ext" ? "ext1h" : `${ex}1h`);
+const conv    = (r1h, tf) => (r1h == null ? null : r1h * TF[tf].mul * 100);
 const calcAPR = (min, max, tf) => (max - min) * TF[tf].annual;
 
 function compareNum(a, b, dir = "desc") {
   if (a == null && b == null) return 0;
-  if (a == null) return 1; // nulls bottom
+  if (a == null) return 1;  // nulls bottom
   if (b == null) return -1;
   return dir === "asc" ? a - b : b - a;
 }
@@ -45,22 +45,18 @@ function renderSortCaret(k) {
     : `<span style="color:#91ffa2;margin-left:4px">↑</span>`;
 }
 
-// ===== Sticky header offset (fix first-row hidden) =====
+// ===== Sticky header offsets (mesure topbar + thead) =====
 function applyStickyOffsets() {
-  // mesure topbar + thead et pousse un spacer pour le tbody
   const topbar = qs(".topbar");
-  const theadRow = qs(".table thead");
-  const root = document.documentElement;
+  const thead  = qs(".table thead");
+  const root   = document.documentElement;
 
-  const topbarH = topbar ? topbar.getBoundingClientRect().height : 56;
-  const theadH = theadRow ? theadRow.getBoundingClientRect().height : 44;
+  const topbarH = topbar ? Math.round(topbar.getBoundingClientRect().height) : 56;
+  const theadH  = thead  ? Math.round(thead.getBoundingClientRect().height)  : 44;
 
-  root.style.setProperty("--topbar-h", `${Math.round(topbarH)}px`);
-  root.style.setProperty("--thead-h", `${Math.round(theadH)}px`);
-  // valeur combinée utilisée par le 'top' du sticky
-  root.style.setProperty("--sticky-top", `${Math.round(topbarH)}px`);
-  // spacer avant tbody pour que la première ligne ne passe jamais sous le thead sticky
-  root.style.setProperty("--tbody-spacer", `${Math.round(theadH)}px`);
+  root.style.setProperty("--topbar-h",  `${topbarH}px`);
+  root.style.setProperty("--thead-h",   `${theadH}px`);
+  root.style.setProperty("--sticky-top",`${topbarH}px`);
 }
 
 // ===== Data =====
@@ -68,17 +64,16 @@ async function load() {
   const res = await axios.get(API_URL);
   if (!Array.isArray(res.data)) throw new Error("Invalid API response");
   state.data = res.data;
+
   renderAll();
   renderCards();
-  // recalcul après rendu car thead existe
+
+  // offsets après rendu + au resize
   requestAnimationFrame(applyStickyOffsets);
-  // et re-synchroniser au resize
-  window.addEventListener("resize", () => {
-    applyStickyOffsets();
-  }, { passive: true });
+  window.addEventListener("resize", () => applyStickyOffsets(), { passive: true });
 }
 
-// ===== Compute opps (non trié pour laisser le tri colonne) =====
+// ===== Compute opps (non trié, tri appliqué dans renderAll) =====
 function computeOpps() {
   const selected = [...state.exSel];
   const out = [];
@@ -98,9 +93,7 @@ function computeOpps() {
 function renderCards() {
   const cards = qs("#cards");
   const list = computeOpps().sort((a, b) => b.apr - a.apr).slice(0, 4);
-  cards.innerHTML = list
-    .map(
-      (o) => `
+  cards.innerHTML = list.map((o) => `
     <article class="card">
       <h3>Top opportunity</h3>
       <div class="pair">
@@ -112,16 +105,15 @@ function renderCards() {
         <span>${EX[o.max.dex].name}: <b class="num">${o.max.rate.toFixed(2)}%</b></span>
       </div>
       <div class="apr">APR <span class="p num">+${o.apr.toFixed(1)}%</span></div>
-    </article>`
-    )
-    .join("");
+    </article>
+  `).join("");
 }
 
 // ===== UI: Table =====
 function renderAll() {
   let opps = computeOpps();
 
-  // TRI selon l'état
+  // TRI
   const { key, dir } = state.sort;
   if (key === "apr") {
     opps.sort((a, b) => compareNum(a.apr, b.apr, dir));
@@ -143,16 +135,14 @@ function renderAll() {
 
   // Head cliquable
   const tr = qs("#thead-row");
-  const exCols = [...state.exSel]
-    .map(
-      (ex) => `<th data-sort="ex:${ex}" style="cursor:pointer">
+  const exCols = [...state.exSel].map((ex) => `
+      <th data-sort="ex:${ex}" style="cursor:pointer">
         <span class="dex"><img src="${EX[ex].logo}">${EX[ex].name}
           <small style="color:var(--muted);margin-left:6px">${state.tf}</small>
         </span>
         ${renderSortCaret(`ex:${ex}`)}
-      </th>`
-    )
-    .join("");
+      </th>
+  `).join("");
 
   tr.innerHTML = `
     <th style="width:36px">★</th>
@@ -162,7 +152,7 @@ function renderAll() {
     <th data-sort="apr" style="text-align:right;cursor:pointer">APR ${renderSortCaret("apr")}</th>
   `;
 
-  // bind tri
+  // Bind tri
   qsa("th[data-sort]").forEach((th) => {
     th.onclick = () => {
       const k = th.getAttribute("data-sort");
@@ -173,7 +163,6 @@ function renderAll() {
         state.sort.dir = k === "pair" ? "asc" : "desc"; // défaut
       }
       renderAll();
-      // recalcul offsets (la hauteur du thead peut changer avec les carets)
       requestAnimationFrame(applyStickyOffsets);
     };
   });
@@ -184,7 +173,10 @@ function renderAll() {
     tb.innerHTML = `<tr><td colspan="99" class="empty">No opportunities</td></tr>`;
     return;
   }
-  tb.innerHTML = opps.map(rowHTML).join("");
+
+  // Spacer réel pour compenser le header sticky
+  const spacerRow = `<tr class="thead-spacer"><td colspan="99"></td></tr>`;
+  tb.innerHTML = spacerRow + opps.map(rowHTML).join("");
 
   // fav
   qsa(".fav").forEach((el) => {
